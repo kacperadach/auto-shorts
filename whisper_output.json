@@ -1,0 +1,2595 @@
+{
+    "detected_language": "en",
+    "device": "cuda",
+    "model": "base",
+    "segments": [
+        {
+            "avg_logprob": -0.3866421568627451,
+            "compression_ratio": 1.3951612903225807,
+            "end": 13.68,
+            "id": 1,
+            "no_speech_prob": 0.16064453125,
+            "seek": 2370,
+            "start": 6.579999999999996,
+            "temperature": 0,
+            "text": " You guys, you guys are unbelievable, man. I'm telling you, we talked about it all year.",
+            "tokens": [
+                50364,
+                509,
+                1074,
+                11,
+                291,
+                1074,
+                366,
+                16605,
+                11,
+                587,
+                13,
+                286,
+                478,
+                3585,
+                291,
+                11,
+                321,
+                2825,
+                466,
+                309,
+                439,
+                1064,
+                13,
+                51064
+            ]
+        },
+        {
+            "avg_logprob": -0.3866421568627451,
+            "compression_ratio": 1.3951612903225807,
+            "end": 23.7,
+            "id": 2,
+            "no_speech_prob": 0.16064453125,
+            "seek": 2370,
+            "start": 14.94,
+            "temperature": 0,
+            "text": " It started a long time ago. You're built for this. You're f**king built for this man.",
+            "tokens": [
+                51064,
+                467,
+                1409,
+                257,
+                938,
+                565,
+                2057,
+                13,
+                509,
+                434,
+                3094,
+                337,
+                341,
+                13,
+                509,
+                434,
+                283,
+                4852,
+                5092,
+                3094,
+                337,
+                341,
+                587,
+                13,
+                51564
+            ]
+        },
+        {
+            "avg_logprob": -0.4221698113207547,
+            "compression_ratio": 1.6638655462184875,
+            "end": 27.04,
+            "id": 3,
+            "no_speech_prob": 0.541015625,
+            "seek": 4990,
+            "start": 23.7,
+            "temperature": 0,
+            "text": " And look what you got to do if you went out there and the what it's another",
+            "tokens": [
+                50364,
+                400,
+                574,
+                437,
+                291,
+                658,
+                281,
+                360,
+                498,
+                291,
+                1437,
+                484,
+                456,
+                293,
+                264,
+                437,
+                309,
+                311,
+                1071,
+                50530
+            ]
+        },
+        {
+            "avg_logprob": -0.4221698113207547,
+            "compression_ratio": 1.6638655462184875,
+            "end": 28.98,
+            "id": 4,
+            "no_speech_prob": 0.541015625,
+            "seek": 4990,
+            "start": 27.04,
+            "temperature": 0,
+            "text": " Team that we knocked off",
+            "tokens": [
+                50555,
+                7606,
+                300,
+                321,
+                16914,
+                766,
+                50655
+            ]
+        },
+        {
+            "avg_logprob": -0.4221698113207547,
+            "compression_ratio": 1.6638655462184875,
+            "end": 34.6,
+            "id": 5,
+            "no_speech_prob": 0.541015625,
+            "seek": 4990,
+            "start": 30.040000000000003,
+            "temperature": 0,
+            "text": " It's the next hot team that you knock off. You know how hard it is to win this league in the playoffs",
+            "tokens": [
+                50672,
+                467,
+                311,
+                264,
+                958,
+                2368,
+                1469,
+                300,
+                291,
+                6728,
+                766,
+                13,
+                509,
+                458,
+                577,
+                1152,
+                309,
+                307,
+                281,
+                1942,
+                341,
+                14957,
+                294,
+                264,
+                41142,
+                50912
+            ]
+        },
+        {
+            "avg_logprob": -0.4221698113207547,
+            "compression_ratio": 1.6638655462184875,
+            "end": 37.24,
+            "id": 6,
+            "no_speech_prob": 0.541015625,
+            "seek": 4990,
+            "start": 35.120000000000005,
+            "temperature": 0,
+            "text": " Do you understand what you're doing right now?",
+            "tokens": [
+                50937,
+                1144,
+                291,
+                1223,
+                437,
+                291,
+                434,
+                884,
+                558,
+                586,
+                30,
+                51037
+            ]
+        },
+        {
+            "avg_logprob": -0.4221698113207547,
+            "compression_ratio": 1.6638655462184875,
+            "end": 44.18,
+            "id": 7,
+            "no_speech_prob": 0.541015625,
+            "seek": 4990,
+            "start": 37.48,
+            "temperature": 0,
+            "text": " What we're capable of it's to all right, that's to we got two to go with a buy in the mill",
+            "tokens": [
+                51050,
+                708,
+                321,
+                434,
+                8189,
+                295,
+                309,
+                311,
+                281,
+                439,
+                558,
+                11,
+                300,
+                311,
+                281,
+                321,
+                658,
+                732,
+                281,
+                352,
+                365,
+                257,
+                2256,
+                294,
+                264,
+                1728,
+                51386
+            ]
+        },
+        {
+            "avg_logprob": -0.4221698113207547,
+            "compression_ratio": 1.6638655462184875,
+            "end": 49.9,
+            "id": 8,
+            "no_speech_prob": 0.541015625,
+            "seek": 4990,
+            "start": 47.04,
+            "temperature": 0,
+            "text": " I'm unbelievably proud of everybody in here man coaches",
+            "tokens": [
+                51522,
+                286,
+                478,
+                43593,
+                4570,
+                295,
+                2201,
+                294,
+                510,
+                587,
+                17503,
+                51676
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 51.88,
+            "id": 9,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 49.9,
+            "temperature": 0,
+            "text": " I just play it, I just wait a man up, man.",
+            "tokens": [
+                50364,
+                286,
+                445,
+                862,
+                309,
+                11,
+                286,
+                445,
+                1699,
+                257,
+                587,
+                493,
+                11,
+                587,
+                13,
+                50472
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 55.02,
+            "id": 10,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 52.1,
+            "temperature": 0,
+            "text": " That's not it, that's a difficult team to beat, man.",
+            "tokens": [
+                50472,
+                663,
+                311,
+                406,
+                309,
+                11,
+                300,
+                311,
+                257,
+                2252,
+                1469,
+                281,
+                4224,
+                11,
+                587,
+                13,
+                50656
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 56.78,
+            "id": 11,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 55.72,
+            "temperature": 0,
+            "text": " All right, I got one game ball.",
+            "tokens": [
+                50656,
+                1057,
+                558,
+                11,
+                286,
+                658,
+                472,
+                1216,
+                2594,
+                13,
+                50736
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 58.74,
+            "id": 12,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 57.3,
+            "temperature": 0,
+            "text": " Man, in the game, yeah.",
+            "tokens": [
+                50736,
+                2458,
+                11,
+                294,
+                264,
+                1216,
+                11,
+                1338,
+                13,
+                50824
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 60.48,
+            "id": 13,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 59.06,
+            "temperature": 0,
+            "text": " And play, dirt balls.",
+            "tokens": [
+                50824,
+                400,
+                862,
+                11,
+                11483,
+                9803,
+                13,
+                50911
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 62.3,
+            "id": 14,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 62.26,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                50961,
+                865,
+                0,
+                51011
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 63.72,
+            "id": 15,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 63.58,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51111,
+                865,
+                0,
+                51161
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 64.22,
+            "id": 16,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 64.02,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51161,
+                865,
+                0,
+                51211
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 66.54,
+            "id": 17,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 66.26,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51311,
+                865,
+                0,
+                51361
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 66.58,
+            "id": 18,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 66.54,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51411,
+                865,
+                0,
+                51461
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 67.04,
+            "id": 19,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 66.9,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51711,
+                865,
+                0,
+                51761
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 68.56,
+            "id": 20,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 68.18,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51761,
+                865,
+                0,
+                51811
+            ]
+        },
+        {
+            "avg_logprob": -0.4354910714285714,
+            "compression_ratio": 2.110294117647059,
+            "end": 69.14,
+            "id": 21,
+            "no_speech_prob": 0.251953125,
+            "seek": 6914,
+            "start": 68.96,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51811,
+                865,
+                0,
+                51861
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 71.1,
+            "id": 22,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 69.14,
+            "temperature": 0,
+            "text": " I'm gonna support in a live-backed room to coaches,",
+            "tokens": [
+                50364,
+                286,
+                478,
+                799,
+                1406,
+                294,
+                257,
+                1621,
+                12,
+                3207,
+                292,
+                1808,
+                281,
+                17503,
+                11,
+                50481
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 73.68,
+            "id": 23,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 71.58,
+            "temperature": 0,
+            "text": " staff, organization, offense, man.",
+            "tokens": [
+                50481,
+                3525,
+                11,
+                4475,
+                11,
+                17834,
+                11,
+                587,
+                13,
+                50614
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 75.72,
+            "id": 24,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 75.08,
+            "temperature": 0,
+            "text": " Three years, man.",
+            "tokens": [
+                50614,
+                6244,
+                924,
+                11,
+                587,
+                13,
+                50716
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 77.62,
+            "id": 25,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 76.12,
+            "temperature": 0,
+            "text": " It took me three years to get the pressure in the section.",
+            "tokens": [
+                50716,
+                467,
+                1890,
+                385,
+                1045,
+                924,
+                281,
+                483,
+                264,
+                3321,
+                294,
+                264,
+                3541,
+                13,
+                50811
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 83.62,
+            "id": 26,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 77.94,
+            "temperature": 0,
+            "text": " But it means more because the people who believed in me,",
+            "tokens": [
+                50811,
+                583,
+                309,
+                1355,
+                544,
+                570,
+                264,
+                561,
+                567,
+                7847,
+                294,
+                385,
+                11,
+                51078
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 86,
+            "id": 27,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 83.78,
+            "temperature": 0,
+            "text": " you know, a lot of people were in the room.",
+            "tokens": [
+                51078,
+                291,
+                458,
+                11,
+                257,
+                688,
+                295,
+                561,
+                645,
+                294,
+                264,
+                1808,
+                13,
+                51220
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 89.6,
+            "id": 28,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 86.18,
+            "temperature": 0,
+            "text": " This ball, you know, I gotta give it to the live-backed room.",
+            "tokens": [
+                51220,
+                639,
+                2594,
+                11,
+                291,
+                458,
+                11,
+                286,
+                3428,
+                976,
+                309,
+                281,
+                264,
+                1621,
+                12,
+                3207,
+                292,
+                1808,
+                13,
+                51395
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 91.56,
+            "id": 29,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 89.66,
+            "temperature": 0,
+            "text": " Cause I said we was gonna bring one back and got, we did.",
+            "tokens": [
+                51395,
+                10865,
+                286,
+                848,
+                321,
+                390,
+                799,
+                1565,
+                472,
+                646,
+                293,
+                658,
+                11,
+                321,
+                630,
+                13,
+                51500
+            ]
+        },
+        {
+            "avg_logprob": -0.5133928571428571,
+            "compression_ratio": 1.6595744680851063,
+            "end": 92,
+            "id": 30,
+            "no_speech_prob": 0.2205810546875,
+            "seek": 9200,
+            "start": 91.74,
+            "temperature": 0,
+            "text": " Yeah!",
+            "tokens": [
+                51500,
+                865,
+                0,
+                51542
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 101.24,
+            "id": 31,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 99.1,
+            "temperature": 0,
+            "text": " And you got to believe how far we can go, man.",
+            "tokens": [
+                50364,
+                400,
+                291,
+                658,
+                281,
+                1697,
+                577,
+                1400,
+                321,
+                393,
+                352,
+                11,
+                587,
+                13,
+                50864
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 102.46,
+            "id": 32,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 101.76,
+            "temperature": 0,
+            "text": " Believe it now.",
+            "tokens": [
+                50864,
+                21486,
+                309,
+                586,
+                13,
+                50914
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 103.96,
+            "id": 33,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 103.26,
+            "temperature": 0,
+            "text": " Believe it now.",
+            "tokens": [
+                50914,
+                21486,
+                309,
+                586,
+                13,
+                50964
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 105.8,
+            "id": 34,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 104.34,
+            "temperature": 0,
+            "text": " This is a good win and joy, man.",
+            "tokens": [
+                50964,
+                639,
+                307,
+                257,
+                665,
+                1942,
+                293,
+                6258,
+                11,
+                587,
+                13,
+                51064
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 107.68,
+            "id": 35,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 106.44,
+            "temperature": 0,
+            "text": " It's come once in a lifetime.",
+            "tokens": [
+                51064,
+                467,
+                311,
+                808,
+                1564,
+                294,
+                257,
+                11364,
+                13,
+                51164
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 110.74,
+            "id": 36,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 108.66,
+            "temperature": 0,
+            "text": " Like Alex would tell me, man, a lot of people don't make it this far.",
+            "tokens": [
+                51164,
+                1743,
+                5202,
+                576,
+                980,
+                385,
+                11,
+                587,
+                11,
+                257,
+                688,
+                295,
+                561,
+                500,
+                380,
+                652,
+                309,
+                341,
+                1400,
+                13,
+                51314
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 111.46,
+            "id": 37,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 110.8,
+            "temperature": 0,
+            "text": " But we did, man.",
+            "tokens": [
+                51314,
+                583,
+                321,
+                630,
+                11,
+                587,
+                13,
+                51364
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 113.24,
+            "id": 38,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 111.82,
+            "temperature": 0,
+            "text": " I love everybody in this room, man.",
+            "tokens": [
+                51364,
+                286,
+                959,
+                2201,
+                294,
+                341,
+                1808,
+                11,
+                587,
+                13,
+                51464
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 114.9,
+            "id": 39,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 113.82,
+            "temperature": 0,
+            "text": " Everybody in here deserve it.",
+            "tokens": [
+                51464,
+                7646,
+                294,
+                510,
+                9948,
+                309,
+                13,
+                51514
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 116.3,
+            "id": 40,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 115.04,
+            "temperature": 0,
+            "text": " That's why we here, like Coach said.",
+            "tokens": [
+                51514,
+                663,
+                311,
+                983,
+                321,
+                510,
+                11,
+                411,
+                17369,
+                848,
+                13,
+                51614
+            ]
+        },
+        {
+            "avg_logprob": -0.2576219512195122,
+            "compression_ratio": 1.6288209606986899,
+            "end": 118.62,
+            "id": 41,
+            "no_speech_prob": 0.034515380859375,
+            "seek": 11900,
+            "start": 117.14,
+            "temperature": 0,
+            "text": " And, man, time to prepare for Sam Friend.",
+            "tokens": [
+                51614,
+                400,
+                11,
+                587,
+                11,
+                565,
+                281,
+                5940,
+                337,
+                4832,
+                22812,
+                13,
+                51714
+            ]
+        }
+    ],
+    "transcription": "00:06.580 --> 00:13.680\nYou guys, you guys are unbelievable, man. I'm telling you, we talked about it all year.\n\n00:14.940 --> 00:23.700\nIt started a long time ago. You're built for this. You're f**king built for this man.\n\n00:23.700 --> 00:27.040\nAnd look what you got to do if you went out there and the what it's another\n\n00:27.040 --> 00:28.980\nTeam that we knocked off\n\n00:30.040 --> 00:34.600\nIt's the next hot team that you knock off. You know how hard it is to win this league in the playoffs\n\n00:35.120 --> 00:37.240\nDo you understand what you're doing right now?\n\n00:37.480 --> 00:44.180\nWhat we're capable of it's to all right, that's to we got two to go with a buy in the mill\n\n00:47.040 --> 00:49.900\nI'm unbelievably proud of everybody in here man coaches\n\n00:49.900 --> 00:51.880\nI just play it, I just wait a man up, man.\n\n00:52.100 --> 00:55.020\nThat's not it, that's a difficult team to beat, man.\n\n00:55.720 --> 00:56.780\nAll right, I got one game ball.\n\n00:57.300 --> 00:58.740\nMan, in the game, yeah.\n\n00:59.060 --> 01:00.480\nAnd play, dirt balls.\n\n01:02.260 --> 01:02.300\nYeah!\n\n01:03.580 --> 01:03.720\nYeah!\n\n01:04.020 --> 01:04.220\nYeah!\n\n01:06.260 --> 01:06.540\nYeah!\n\n01:06.540 --> 01:06.580\nYeah!\n\n01:06.900 --> 01:07.040\nYeah!\n\n01:08.180 --> 01:08.560\nYeah!\n\n01:08.960 --> 01:09.140\nYeah!\n\n01:09.140 --> 01:11.100\nI'm gonna support in a live-backed room to coaches,\n\n01:11.580 --> 01:13.680\nstaff, organization, offense, man.\n\n01:15.080 --> 01:15.720\nThree years, man.\n\n01:16.120 --> 01:17.620\nIt took me three years to get the pressure in the section.\n\n01:17.940 --> 01:23.620\nBut it means more because the people who believed in me,\n\n01:23.780 --> 01:26.000\nyou know, a lot of people were in the room.\n\n01:26.180 --> 01:29.600\nThis ball, you know, I gotta give it to the live-backed room.\n\n01:29.660 --> 01:31.560\nCause I said we was gonna bring one back and got, we did.\n\n01:31.740 --> 01:32.000\nYeah!\n\n01:39.100 --> 01:41.240\nAnd you got to believe how far we can go, man.\n\n01:41.760 --> 01:42.460\nBelieve it now.\n\n01:43.260 --> 01:43.960\nBelieve it now.\n\n01:44.340 --> 01:45.800\nThis is a good win and joy, man.\n\n01:46.440 --> 01:47.680\nIt's come once in a lifetime.\n\n01:48.660 --> 01:50.740\nLike Alex would tell me, man, a lot of people don't make it this far.\n\n01:50.800 --> 01:51.460\nBut we did, man.\n\n01:51.820 --> 01:53.240\nI love everybody in this room, man.\n\n01:53.820 --> 01:54.900\nEverybody in here deserve it.\n\n01:55.040 --> 01:56.300\nThat's why we here, like Coach said.\n\n01:57.140 --> 01:58.620\nAnd, man, time to prepare for Sam Friend.\n\n",
+    "translation": null,
+    "word_timestamps": [
+        {
+            "end": 7.139999999999998,
+            "start": 6.579999999999996,
+            "word": " You"
+        },
+        {
+            "end": 7.7,
+            "start": 7.139999999999998,
+            "word": " guys,"
+        },
+        {
+            "end": 8.32,
+            "start": 7.86,
+            "word": " you"
+        },
+        {
+            "end": 8.52,
+            "start": 8.32,
+            "word": " guys"
+        },
+        {
+            "end": 8.68,
+            "start": 8.52,
+            "word": " are"
+        },
+        {
+            "end": 9,
+            "start": 8.68,
+            "word": " unbelievable,"
+        },
+        {
+            "end": 9.44,
+            "start": 9,
+            "word": " man."
+        },
+        {
+            "end": 10.78,
+            "start": 10.22,
+            "word": " I'm"
+        },
+        {
+            "end": 11.1,
+            "start": 10.78,
+            "word": " telling"
+        },
+        {
+            "end": 11.42,
+            "start": 11.1,
+            "word": " you,"
+        },
+        {
+            "end": 12.2,
+            "start": 11.62,
+            "word": " we"
+        },
+        {
+            "end": 12.36,
+            "start": 12.2,
+            "word": " talked"
+        },
+        {
+            "end": 12.64,
+            "start": 12.36,
+            "word": " about"
+        },
+        {
+            "end": 12.76,
+            "start": 12.64,
+            "word": " it"
+        },
+        {
+            "end": 12.96,
+            "start": 12.76,
+            "word": " all"
+        },
+        {
+            "end": 13.68,
+            "start": 12.96,
+            "word": " year."
+        },
+        {
+            "end": 15,
+            "start": 14.94,
+            "word": " It"
+        },
+        {
+            "end": 15.54,
+            "start": 15,
+            "word": " started"
+        },
+        {
+            "end": 15.76,
+            "start": 15.54,
+            "word": " a"
+        },
+        {
+            "end": 15.92,
+            "start": 15.76,
+            "word": " long"
+        },
+        {
+            "end": 16.2,
+            "start": 15.92,
+            "word": " time"
+        },
+        {
+            "end": 16.52,
+            "start": 16.2,
+            "word": " ago."
+        },
+        {
+            "end": 19.64,
+            "start": 19.08,
+            "word": " You're"
+        },
+        {
+            "end": 19.84,
+            "start": 19.64,
+            "word": " built"
+        },
+        {
+            "end": 20.06,
+            "start": 19.84,
+            "word": " for"
+        },
+        {
+            "end": 20.3,
+            "start": 20.06,
+            "word": " this."
+        },
+        {
+            "end": 22.32,
+            "start": 21.76,
+            "word": " You're"
+        },
+        {
+            "end": 22.74,
+            "start": 22.32,
+            "word": " f**king"
+        },
+        {
+            "end": 22.98,
+            "start": 22.74,
+            "word": " built"
+        },
+        {
+            "end": 23.22,
+            "start": 22.98,
+            "word": " for"
+        },
+        {
+            "end": 23.44,
+            "start": 23.22,
+            "word": " this"
+        },
+        {
+            "end": 23.7,
+            "start": 23.44,
+            "word": " man."
+        },
+        {
+            "end": 23.96,
+            "start": 23.7,
+            "word": " And"
+        },
+        {
+            "end": 24.1,
+            "start": 23.96,
+            "word": " look"
+        },
+        {
+            "end": 24.28,
+            "start": 24.1,
+            "word": " what"
+        },
+        {
+            "end": 24.42,
+            "start": 24.28,
+            "word": " you"
+        },
+        {
+            "end": 24.62,
+            "start": 24.42,
+            "word": " got"
+        },
+        {
+            "end": 24.72,
+            "start": 24.62,
+            "word": " to"
+        },
+        {
+            "end": 24.84,
+            "start": 24.72,
+            "word": " do"
+        },
+        {
+            "end": 24.98,
+            "start": 24.84,
+            "word": " if"
+        },
+        {
+            "end": 25.06,
+            "start": 24.98,
+            "word": " you"
+        },
+        {
+            "end": 25.2,
+            "start": 25.06,
+            "word": " went"
+        },
+        {
+            "end": 25.36,
+            "start": 25.2,
+            "word": " out"
+        },
+        {
+            "end": 25.58,
+            "start": 25.36,
+            "word": " there"
+        },
+        {
+            "end": 26.12,
+            "start": 25.58,
+            "word": " and"
+        },
+        {
+            "end": 26.24,
+            "start": 26.12,
+            "word": " the"
+        },
+        {
+            "end": 26.4,
+            "start": 26.24,
+            "word": " what"
+        },
+        {
+            "end": 26.78,
+            "start": 26.4,
+            "word": " it's"
+        },
+        {
+            "end": 27.04,
+            "start": 26.78,
+            "word": " another"
+        },
+        {
+            "end": 27.5,
+            "start": 27.04,
+            "word": " Team"
+        },
+        {
+            "end": 28.16,
+            "start": 27.5,
+            "word": " that"
+        },
+        {
+            "end": 28.3,
+            "start": 28.16,
+            "word": " we"
+        },
+        {
+            "end": 28.52,
+            "start": 28.3,
+            "word": " knocked"
+        },
+        {
+            "end": 28.98,
+            "start": 28.52,
+            "word": " off"
+        },
+        {
+            "end": 30.48,
+            "start": 30.040000000000003,
+            "word": " It's"
+        },
+        {
+            "end": 30.56,
+            "start": 30.48,
+            "word": " the"
+        },
+        {
+            "end": 30.76,
+            "start": 30.56,
+            "word": " next"
+        },
+        {
+            "end": 31,
+            "start": 30.76,
+            "word": " hot"
+        },
+        {
+            "end": 31.3,
+            "start": 31,
+            "word": " team"
+        },
+        {
+            "end": 31.44,
+            "start": 31.3,
+            "word": " that"
+        },
+        {
+            "end": 31.54,
+            "start": 31.44,
+            "word": " you"
+        },
+        {
+            "end": 31.72,
+            "start": 31.54,
+            "word": " knock"
+        },
+        {
+            "end": 32,
+            "start": 31.72,
+            "word": " off."
+        },
+        {
+            "end": 32.1,
+            "start": 32.08,
+            "word": " You"
+        },
+        {
+            "end": 32.2,
+            "start": 32.1,
+            "word": " know"
+        },
+        {
+            "end": 32.28,
+            "start": 32.2,
+            "word": " how"
+        },
+        {
+            "end": 32.52,
+            "start": 32.28,
+            "word": " hard"
+        },
+        {
+            "end": 32.66,
+            "start": 32.52,
+            "word": " it"
+        },
+        {
+            "end": 32.84,
+            "start": 32.66,
+            "word": " is"
+        },
+        {
+            "end": 32.96,
+            "start": 32.84,
+            "word": " to"
+        },
+        {
+            "end": 33.14,
+            "start": 32.96,
+            "word": " win"
+        },
+        {
+            "end": 33.4,
+            "start": 33.14,
+            "word": " this"
+        },
+        {
+            "end": 34.02,
+            "start": 33.4,
+            "word": " league"
+        },
+        {
+            "end": 34.2,
+            "start": 34.02,
+            "word": " in"
+        },
+        {
+            "end": 34.24,
+            "start": 34.2,
+            "word": " the"
+        },
+        {
+            "end": 34.6,
+            "start": 34.24,
+            "word": " playoffs"
+        },
+        {
+            "end": 35.56,
+            "start": 35.120000000000005,
+            "word": " Do"
+        },
+        {
+            "end": 35.64,
+            "start": 35.56,
+            "word": " you"
+        },
+        {
+            "end": 35.94,
+            "start": 35.64,
+            "word": " understand"
+        },
+        {
+            "end": 36.18,
+            "start": 35.94,
+            "word": " what"
+        },
+        {
+            "end": 36.42,
+            "start": 36.18,
+            "word": " you're"
+        },
+        {
+            "end": 36.66,
+            "start": 36.42,
+            "word": " doing"
+        },
+        {
+            "end": 36.92,
+            "start": 36.66,
+            "word": " right"
+        },
+        {
+            "end": 37.24,
+            "start": 36.92,
+            "word": " now?"
+        },
+        {
+            "end": 37.92,
+            "start": 37.48,
+            "word": " What"
+        },
+        {
+            "end": 38.08,
+            "start": 37.92,
+            "word": " we're"
+        },
+        {
+            "end": 38.42,
+            "start": 38.08,
+            "word": " capable"
+        },
+        {
+            "end": 38.96,
+            "start": 38.42,
+            "word": " of"
+        },
+        {
+            "end": 39.72,
+            "start": 38.96,
+            "word": " it's"
+        },
+        {
+            "end": 39.92,
+            "start": 39.72,
+            "word": " to"
+        },
+        {
+            "end": 40.52,
+            "start": 39.92,
+            "word": " all"
+        },
+        {
+            "end": 40.68,
+            "start": 40.52,
+            "word": " right,"
+        },
+        {
+            "end": 41.14,
+            "start": 40.88,
+            "word": " that's"
+        },
+        {
+            "end": 41.32,
+            "start": 41.14,
+            "word": " to"
+        },
+        {
+            "end": 42,
+            "start": 41.32,
+            "word": " we"
+        },
+        {
+            "end": 42.12,
+            "start": 42,
+            "word": " got"
+        },
+        {
+            "end": 42.38,
+            "start": 42.12,
+            "word": " two"
+        },
+        {
+            "end": 42.48,
+            "start": 42.38,
+            "word": " to"
+        },
+        {
+            "end": 42.7,
+            "start": 42.48,
+            "word": " go"
+        },
+        {
+            "end": 43.3,
+            "start": 42.7,
+            "word": " with"
+        },
+        {
+            "end": 43.4,
+            "start": 43.3,
+            "word": " a"
+        },
+        {
+            "end": 43.62,
+            "start": 43.4,
+            "word": " buy"
+        },
+        {
+            "end": 43.84,
+            "start": 43.62,
+            "word": " in"
+        },
+        {
+            "end": 43.92,
+            "start": 43.84,
+            "word": " the"
+        },
+        {
+            "end": 44.18,
+            "start": 43.92,
+            "word": " mill"
+        },
+        {
+            "end": 47.48,
+            "start": 47.04,
+            "word": " I'm"
+        },
+        {
+            "end": 47.9,
+            "start": 47.48,
+            "word": " unbelievably"
+        },
+        {
+            "end": 48.36,
+            "start": 47.9,
+            "word": " proud"
+        },
+        {
+            "end": 48.52,
+            "start": 48.36,
+            "word": " of"
+        },
+        {
+            "end": 48.8,
+            "start": 48.52,
+            "word": " everybody"
+        },
+        {
+            "end": 49.06,
+            "start": 48.8,
+            "word": " in"
+        },
+        {
+            "end": 49.18,
+            "start": 49.06,
+            "word": " here"
+        },
+        {
+            "end": 49.4,
+            "start": 49.18,
+            "word": " man"
+        },
+        {
+            "end": 49.9,
+            "start": 49.4,
+            "word": " coaches"
+        },
+        {
+            "end": 50,
+            "start": 49.9,
+            "word": " I"
+        },
+        {
+            "end": 50,
+            "start": 50,
+            "word": " just"
+        },
+        {
+            "end": 50.62,
+            "start": 50,
+            "word": " play"
+        },
+        {
+            "end": 50.74,
+            "start": 50.62,
+            "word": " it,"
+        },
+        {
+            "end": 50.92,
+            "start": 50.74,
+            "word": " I"
+        },
+        {
+            "end": 50.94,
+            "start": 50.92,
+            "word": " just"
+        },
+        {
+            "end": 51.12,
+            "start": 50.94,
+            "word": " wait"
+        },
+        {
+            "end": 51.2,
+            "start": 51.12,
+            "word": " a"
+        },
+        {
+            "end": 51.32,
+            "start": 51.2,
+            "word": " man"
+        },
+        {
+            "end": 51.64,
+            "start": 51.32,
+            "word": " up,"
+        },
+        {
+            "end": 51.88,
+            "start": 51.74,
+            "word": " man."
+        },
+        {
+            "end": 52.22,
+            "start": 52.1,
+            "word": " That's"
+        },
+        {
+            "end": 52.32,
+            "start": 52.22,
+            "word": " not"
+        },
+        {
+            "end": 52.5,
+            "start": 52.32,
+            "word": " it,"
+        },
+        {
+            "end": 53.22,
+            "start": 52.58,
+            "word": " that's"
+        },
+        {
+            "end": 53.3,
+            "start": 53.22,
+            "word": " a"
+        },
+        {
+            "end": 53.92,
+            "start": 53.3,
+            "word": " difficult"
+        },
+        {
+            "end": 54.42,
+            "start": 53.92,
+            "word": " team"
+        },
+        {
+            "end": 54.56,
+            "start": 54.42,
+            "word": " to"
+        },
+        {
+            "end": 54.74,
+            "start": 54.56,
+            "word": " beat,"
+        },
+        {
+            "end": 55.02,
+            "start": 54.84,
+            "word": " man."
+        },
+        {
+            "end": 55.8,
+            "start": 55.72,
+            "word": " All"
+        },
+        {
+            "end": 55.88,
+            "start": 55.8,
+            "word": " right,"
+        },
+        {
+            "end": 56.02,
+            "start": 55.94,
+            "word": " I"
+        },
+        {
+            "end": 56.1,
+            "start": 56.02,
+            "word": " got"
+        },
+        {
+            "end": 56.3,
+            "start": 56.1,
+            "word": " one"
+        },
+        {
+            "end": 56.56,
+            "start": 56.3,
+            "word": " game"
+        },
+        {
+            "end": 56.78,
+            "start": 56.56,
+            "word": " ball."
+        },
+        {
+            "end": 57.52,
+            "start": 57.3,
+            "word": " Man,"
+        },
+        {
+            "end": 58,
+            "start": 57.92,
+            "word": " in"
+        },
+        {
+            "end": 58.14,
+            "start": 58,
+            "word": " the"
+        },
+        {
+            "end": 58.42,
+            "start": 58.14,
+            "word": " game,"
+        },
+        {
+            "end": 58.74,
+            "start": 58.6,
+            "word": " yeah."
+        },
+        {
+            "end": 59.2,
+            "start": 59.06,
+            "word": " And"
+        },
+        {
+            "end": 59.58,
+            "start": 59.2,
+            "word": " play,"
+        },
+        {
+            "end": 60.2,
+            "start": 60,
+            "word": " dirt"
+        },
+        {
+            "end": 60.48,
+            "start": 60.2,
+            "word": " balls."
+        },
+        {
+            "end": 62.3,
+            "start": 62.26,
+            "word": " Yeah!"
+        },
+        {
+            "end": 63.72,
+            "start": 63.58,
+            "word": " Yeah!"
+        },
+        {
+            "end": 64.22,
+            "start": 64.02,
+            "word": " Yeah!"
+        },
+        {
+            "end": 66.54,
+            "start": 66.26,
+            "word": " Yeah!"
+        },
+        {
+            "end": 66.58,
+            "start": 66.54,
+            "word": " Yeah!"
+        },
+        {
+            "end": 67.04,
+            "start": 66.9,
+            "word": " Yeah!"
+        },
+        {
+            "end": 68.56,
+            "start": 68.18,
+            "word": " Yeah!"
+        },
+        {
+            "end": 69.14,
+            "start": 68.96,
+            "word": " Yeah!"
+        },
+        {
+            "end": 69.18,
+            "start": 69.14,
+            "word": " I'm"
+        },
+        {
+            "end": 69.24,
+            "start": 69.18,
+            "word": " gonna"
+        },
+        {
+            "end": 69.54,
+            "start": 69.24,
+            "word": " support"
+        },
+        {
+            "end": 69.92,
+            "start": 69.54,
+            "word": " in"
+        },
+        {
+            "end": 70.02,
+            "start": 69.92,
+            "word": " a"
+        },
+        {
+            "end": 70.18,
+            "start": 70.02,
+            "word": " live"
+        },
+        {
+            "end": 70.44,
+            "start": 70.18,
+            "word": "-backed"
+        },
+        {
+            "end": 70.56,
+            "start": 70.44,
+            "word": " room"
+        },
+        {
+            "end": 70.76,
+            "start": 70.56,
+            "word": " to"
+        },
+        {
+            "end": 71.1,
+            "start": 70.76,
+            "word": " coaches,"
+        },
+        {
+            "end": 71.68,
+            "start": 71.58,
+            "word": " staff,"
+        },
+        {
+            "end": 72.38,
+            "start": 72.04,
+            "word": " organization,"
+        },
+        {
+            "end": 73.34,
+            "start": 73.06,
+            "word": " offense,"
+        },
+        {
+            "end": 73.68,
+            "start": 73.56,
+            "word": " man."
+        },
+        {
+            "end": 75.24,
+            "start": 75.08,
+            "word": " Three"
+        },
+        {
+            "end": 75.48,
+            "start": 75.24,
+            "word": " years,"
+        },
+        {
+            "end": 75.72,
+            "start": 75.64,
+            "word": " man."
+        },
+        {
+            "end": 76.18,
+            "start": 76.12,
+            "word": " It"
+        },
+        {
+            "end": 76.24,
+            "start": 76.18,
+            "word": " took"
+        },
+        {
+            "end": 76.34,
+            "start": 76.24,
+            "word": " me"
+        },
+        {
+            "end": 76.52,
+            "start": 76.34,
+            "word": " three"
+        },
+        {
+            "end": 76.7,
+            "start": 76.52,
+            "word": " years"
+        },
+        {
+            "end": 76.84,
+            "start": 76.7,
+            "word": " to"
+        },
+        {
+            "end": 76.94,
+            "start": 76.84,
+            "word": " get"
+        },
+        {
+            "end": 77.04,
+            "start": 76.94,
+            "word": " the"
+        },
+        {
+            "end": 77.14,
+            "start": 77.04,
+            "word": " pressure"
+        },
+        {
+            "end": 77.32,
+            "start": 77.14,
+            "word": " in"
+        },
+        {
+            "end": 77.36,
+            "start": 77.32,
+            "word": " the"
+        },
+        {
+            "end": 77.62,
+            "start": 77.36,
+            "word": " section."
+        },
+        {
+            "end": 77.94,
+            "start": 77.94,
+            "word": " But"
+        },
+        {
+            "end": 78.18,
+            "start": 77.94,
+            "word": " it"
+        },
+        {
+            "end": 80.84,
+            "start": 78.18,
+            "word": " means"
+        },
+        {
+            "end": 81.2,
+            "start": 80.84,
+            "word": " more"
+        },
+        {
+            "end": 81.78,
+            "start": 81.2,
+            "word": " because"
+        },
+        {
+            "end": 82.62,
+            "start": 81.78,
+            "word": " the"
+        },
+        {
+            "end": 82.8,
+            "start": 82.62,
+            "word": " people"
+        },
+        {
+            "end": 82.94,
+            "start": 82.8,
+            "word": " who"
+        },
+        {
+            "end": 83.22,
+            "start": 82.94,
+            "word": " believed"
+        },
+        {
+            "end": 83.46,
+            "start": 83.22,
+            "word": " in"
+        },
+        {
+            "end": 83.62,
+            "start": 83.46,
+            "word": " me,"
+        },
+        {
+            "end": 83.82,
+            "start": 83.78,
+            "word": " you"
+        },
+        {
+            "end": 84.12,
+            "start": 83.82,
+            "word": " know,"
+        },
+        {
+            "end": 84.24,
+            "start": 84.18,
+            "word": " a"
+        },
+        {
+            "end": 84.36,
+            "start": 84.24,
+            "word": " lot"
+        },
+        {
+            "end": 84.44,
+            "start": 84.36,
+            "word": " of"
+        },
+        {
+            "end": 84.6,
+            "start": 84.44,
+            "word": " people"
+        },
+        {
+            "end": 84.72,
+            "start": 84.6,
+            "word": " were"
+        },
+        {
+            "end": 84.88,
+            "start": 84.72,
+            "word": " in"
+        },
+        {
+            "end": 85.7,
+            "start": 84.88,
+            "word": " the"
+        },
+        {
+            "end": 86,
+            "start": 85.7,
+            "word": " room."
+        },
+        {
+            "end": 86.32,
+            "start": 86.18,
+            "word": " This"
+        },
+        {
+            "end": 86.62,
+            "start": 86.32,
+            "word": " ball,"
+        },
+        {
+            "end": 87.36,
+            "start": 87.2,
+            "word": " you"
+        },
+        {
+            "end": 87.5,
+            "start": 87.36,
+            "word": " know,"
+        },
+        {
+            "end": 88.58,
+            "start": 87.76,
+            "word": " I"
+        },
+        {
+            "end": 88.74,
+            "start": 88.58,
+            "word": " gotta"
+        },
+        {
+            "end": 88.9,
+            "start": 88.74,
+            "word": " give"
+        },
+        {
+            "end": 88.98,
+            "start": 88.9,
+            "word": " it"
+        },
+        {
+            "end": 89.06,
+            "start": 88.98,
+            "word": " to"
+        },
+        {
+            "end": 89.12,
+            "start": 89.06,
+            "word": " the"
+        },
+        {
+            "end": 89.26,
+            "start": 89.12,
+            "word": " live"
+        },
+        {
+            "end": 89.48,
+            "start": 89.26,
+            "word": "-backed"
+        },
+        {
+            "end": 89.6,
+            "start": 89.48,
+            "word": " room."
+        },
+        {
+            "end": 89.74,
+            "start": 89.66,
+            "word": " Cause"
+        },
+        {
+            "end": 89.82,
+            "start": 89.74,
+            "word": " I"
+        },
+        {
+            "end": 89.96,
+            "start": 89.82,
+            "word": " said"
+        },
+        {
+            "end": 90.1,
+            "start": 89.96,
+            "word": " we"
+        },
+        {
+            "end": 90.14,
+            "start": 90.1,
+            "word": " was"
+        },
+        {
+            "end": 90.22,
+            "start": 90.14,
+            "word": " gonna"
+        },
+        {
+            "end": 90.36,
+            "start": 90.22,
+            "word": " bring"
+        },
+        {
+            "end": 90.5,
+            "start": 90.36,
+            "word": " one"
+        },
+        {
+            "end": 90.7,
+            "start": 90.5,
+            "word": " back"
+        },
+        {
+            "end": 90.86,
+            "start": 90.7,
+            "word": " and"
+        },
+        {
+            "end": 90.98,
+            "start": 90.86,
+            "word": " got,"
+        },
+        {
+            "end": 91.36,
+            "start": 91.1,
+            "word": " we"
+        },
+        {
+            "end": 91.56,
+            "start": 91.36,
+            "word": " did."
+        },
+        {
+            "end": 92,
+            "start": 91.74,
+            "word": " Yeah!"
+        },
+        {
+            "end": 99.41999999999999,
+            "start": 99.1,
+            "word": " And"
+        },
+        {
+            "end": 99.74,
+            "start": 99.41999999999999,
+            "word": " you"
+        },
+        {
+            "end": 99.88,
+            "start": 99.74,
+            "word": " got"
+        },
+        {
+            "end": 99.98,
+            "start": 99.88,
+            "word": " to"
+        },
+        {
+            "end": 100.22,
+            "start": 99.98,
+            "word": " believe"
+        },
+        {
+            "end": 100.42,
+            "start": 100.22,
+            "word": " how"
+        },
+        {
+            "end": 100.6,
+            "start": 100.42,
+            "word": " far"
+        },
+        {
+            "end": 100.72,
+            "start": 100.6,
+            "word": " we"
+        },
+        {
+            "end": 100.86,
+            "start": 100.72,
+            "word": " can"
+        },
+        {
+            "end": 101.02,
+            "start": 100.86,
+            "word": " go,"
+        },
+        {
+            "end": 101.24,
+            "start": 101.1,
+            "word": " man."
+        },
+        {
+            "end": 102.08,
+            "start": 101.76,
+            "word": " Believe"
+        },
+        {
+            "end": 102.26,
+            "start": 102.08,
+            "word": " it"
+        },
+        {
+            "end": 102.46,
+            "start": 102.26,
+            "word": " now."
+        },
+        {
+            "end": 103.58,
+            "start": 103.26,
+            "word": " Believe"
+        },
+        {
+            "end": 103.76,
+            "start": 103.58,
+            "word": " it"
+        },
+        {
+            "end": 103.96,
+            "start": 103.76,
+            "word": " now."
+        },
+        {
+            "end": 104.58,
+            "start": 104.34,
+            "word": " This"
+        },
+        {
+            "end": 104.7,
+            "start": 104.58,
+            "word": " is"
+        },
+        {
+            "end": 104.84,
+            "start": 104.7,
+            "word": " a"
+        },
+        {
+            "end": 104.9,
+            "start": 104.84,
+            "word": " good"
+        },
+        {
+            "end": 105.12,
+            "start": 104.9,
+            "word": " win"
+        },
+        {
+            "end": 105.26,
+            "start": 105.12,
+            "word": " and"
+        },
+        {
+            "end": 105.52,
+            "start": 105.26,
+            "word": " joy,"
+        },
+        {
+            "end": 105.8,
+            "start": 105.64,
+            "word": " man."
+        },
+        {
+            "end": 106.76,
+            "start": 106.44,
+            "word": " It's"
+        },
+        {
+            "end": 106.88,
+            "start": 106.76,
+            "word": " come"
+        },
+        {
+            "end": 107.12,
+            "start": 106.88,
+            "word": " once"
+        },
+        {
+            "end": 107.26,
+            "start": 107.12,
+            "word": " in"
+        },
+        {
+            "end": 107.36,
+            "start": 107.26,
+            "word": " a"
+        },
+        {
+            "end": 107.68,
+            "start": 107.36,
+            "word": " lifetime."
+        },
+        {
+            "end": 108.78,
+            "start": 108.66,
+            "word": " Like"
+        },
+        {
+            "end": 109,
+            "start": 108.78,
+            "word": " Alex"
+        },
+        {
+            "end": 109.14,
+            "start": 109,
+            "word": " would"
+        },
+        {
+            "end": 109.34,
+            "start": 109.14,
+            "word": " tell"
+        },
+        {
+            "end": 109.44,
+            "start": 109.34,
+            "word": " me,"
+        },
+        {
+            "end": 109.6,
+            "start": 109.56,
+            "word": " man,"
+        },
+        {
+            "end": 109.68,
+            "start": 109.68,
+            "word": " a"
+        },
+        {
+            "end": 109.78,
+            "start": 109.68,
+            "word": " lot"
+        },
+        {
+            "end": 109.84,
+            "start": 109.78,
+            "word": " of"
+        },
+        {
+            "end": 110,
+            "start": 109.84,
+            "word": " people"
+        },
+        {
+            "end": 110.12,
+            "start": 110,
+            "word": " don't"
+        },
+        {
+            "end": 110.26,
+            "start": 110.12,
+            "word": " make"
+        },
+        {
+            "end": 110.36,
+            "start": 110.26,
+            "word": " it"
+        },
+        {
+            "end": 110.52,
+            "start": 110.36,
+            "word": " this"
+        },
+        {
+            "end": 110.74,
+            "start": 110.52,
+            "word": " far."
+        },
+        {
+            "end": 110.86,
+            "start": 110.8,
+            "word": " But"
+        },
+        {
+            "end": 111.04,
+            "start": 110.86,
+            "word": " we"
+        },
+        {
+            "end": 111.2,
+            "start": 111.04,
+            "word": " did,"
+        },
+        {
+            "end": 111.46,
+            "start": 111.36,
+            "word": " man."
+        },
+        {
+            "end": 111.84,
+            "start": 111.82,
+            "word": " I"
+        },
+        {
+            "end": 112.06,
+            "start": 111.84,
+            "word": " love"
+        },
+        {
+            "end": 112.4,
+            "start": 112.06,
+            "word": " everybody"
+        },
+        {
+            "end": 112.58,
+            "start": 112.4,
+            "word": " in"
+        },
+        {
+            "end": 112.72,
+            "start": 112.58,
+            "word": " this"
+        },
+        {
+            "end": 112.94,
+            "start": 112.72,
+            "word": " room,"
+        },
+        {
+            "end": 113.24,
+            "start": 112.94,
+            "word": " man."
+        },
+        {
+            "end": 114.14,
+            "start": 113.82,
+            "word": " Everybody"
+        },
+        {
+            "end": 114.32,
+            "start": 114.14,
+            "word": " in"
+        },
+        {
+            "end": 114.4,
+            "start": 114.32,
+            "word": " here"
+        },
+        {
+            "end": 114.64,
+            "start": 114.4,
+            "word": " deserve"
+        },
+        {
+            "end": 114.9,
+            "start": 114.64,
+            "word": " it."
+        },
+        {
+            "end": 115.2,
+            "start": 115.04,
+            "word": " That's"
+        },
+        {
+            "end": 115.3,
+            "start": 115.2,
+            "word": " why"
+        },
+        {
+            "end": 115.44,
+            "start": 115.3,
+            "word": " we"
+        },
+        {
+            "end": 115.66,
+            "start": 115.44,
+            "word": " here,"
+        },
+        {
+            "end": 115.86,
+            "start": 115.72,
+            "word": " like"
+        },
+        {
+            "end": 116.1,
+            "start": 115.86,
+            "word": " Coach"
+        },
+        {
+            "end": 116.3,
+            "start": 116.1,
+            "word": " said."
+        },
+        {
+            "end": 117.28,
+            "start": 117.14,
+            "word": " And,"
+        },
+        {
+            "end": 117.42,
+            "start": 117.36,
+            "word": " man,"
+        },
+        {
+            "end": 117.64,
+            "start": 117.52,
+            "word": " time"
+        },
+        {
+            "end": 117.74,
+            "start": 117.64,
+            "word": " to"
+        },
+        {
+            "end": 117.94,
+            "start": 117.74,
+            "word": " prepare"
+        },
+        {
+            "end": 118.16,
+            "start": 117.94,
+            "word": " for"
+        },
+        {
+            "end": 118.36,
+            "start": 118.16,
+            "word": " Sam"
+        },
+        {
+            "end": 118.62,
+            "start": 118.36,
+            "word": " Friend."
+        }
+    ]
+}
