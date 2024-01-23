@@ -3,6 +3,8 @@ import os
 import requests
 from pydantic import BaseModel
 
+from models import TextSegment, TranscriptionSegment
+
 
 RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY")
 RUNPOD_URL = "https://api.runpod.ai/v2/faster-whisper/run"
@@ -58,14 +60,7 @@ def get_whisper_status_runpod(job_id: str):
     ).json()
 
 
-class TextSegment(BaseModel):
-    start: float
-    end: float
-    text: str
 
-
-class TranscriptionSegment(TextSegment):
-    word_timings: list[TextSegment]
 
 
 def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:

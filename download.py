@@ -146,11 +146,16 @@ def download_youtube_audio(url, info=None, audio_ext="m4a"):
 
     audio_format = _get_highest_quality_audio_format(info["formats"], audio_ext)
     print(audio_format)
+
+    youtube_download = DownloadHook()
     ydl_opts = {
+        "progress_hooks": [youtube_download.get_filename],
         "format": audio_format["format_id"],
     }
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download(url)
+
+    return re.sub(r"\.f\d+", "", youtube_download.filename)
 
 
 def extract_clip(path, start, end):
