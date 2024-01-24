@@ -19,7 +19,7 @@ const PRIMARY_URL =
 const SECONDARY_URL =
   "https://auto-shorts-storage.s3.amazonaws.com/video/0fb494f4-73c4-45fb-8686-90201058297a.mp4";
 
-const DURATION = 40;
+const DURATION = 41;
 
 export function VideoPlayer() {
   const videoPlayerRef = useRef<PlayerRef>(null);
@@ -33,7 +33,7 @@ export function VideoPlayer() {
         alignItems: "center",
         width: "100%",
         marginTop: "2rem",
-        transform: "scale(0.5)",
+        transform: "scale(0.4)",
         transformOrigin: "top center",
       }}
     >
@@ -47,6 +47,8 @@ export function VideoPlayer() {
               durationInFrames={DURATION * FPS}
               width={1080}
               height={1920}
+              highlightColor="#33FF52"
+              secondaryColor="#FF3352"
             />
           ),
           []

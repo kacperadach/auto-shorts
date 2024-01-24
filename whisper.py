@@ -38,9 +38,7 @@ class WhisperBody(BaseModel):
 
 def call_whisper_runpod(audio_file_path: str):
     body = WhisperBody(
-        input=WhisperInput(
-            audio=audio_file_path, transcription=None, word_timestamps=True
-        )
+        input=WhisperInput(audio=audio_file_path, transcription=None, word_timestamps=True)
     )
     response = requests.post(
         RUNPOD_URL,
@@ -60,20 +58,22 @@ def get_whisper_status_runpod(job_id: str):
     ).json()
 
 
-
-
-
 def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
     output_segments = []
 
     word_index = 0
-    for segment in output["segments"]:
+    for index, segment in enumerate(output["segments"]):
         word_timings = []
 
-        while (
-            word_index < len(output["word_timestamps"])  and
-            output["word_timestamps"][word_index]["start"] >= segment["start"]
-            and output["word_timestamps"][word_index]["end"] <= segment["end"]
+        while word_index < len(output["word_timestamps"]) and (
+            (
+                output["word_timestamps"][word_index]["start"] >= segment["start"]
+                and output["word_timestamps"][word_index]["start"] < segment["end"]
+            )
+            or (
+                output["word_timestamps"][word_index]["end"] > segment["start"]
+                and output["word_timestamps"][word_index]["end"] <= segment["end"]
+            )
         ):
             word_timings.append(
                 TextSegment(
@@ -84,6 +84,15 @@ def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
             )
             word_index += 1
 
+        # if not word_timings:
+        #     print(output["segments"][index - 1])
+        #     print(segment)
+        #     try:
+        #         print(output["word_timestamps"][word_index])
+        #     except Exception:
+        #         pass
+        #     raise Exception("No word timings found for segment")
+
         output_segments.append(
             TranscriptionSegment(
                 start=segment["start"],
@@ -93,5 +102,6 @@ def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
             )
         )
 
-    return output_segments
+    print(word_index)
 
+    return output_segments

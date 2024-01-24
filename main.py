@@ -24,7 +24,9 @@ from llm.llm import (
     get_clips,
 )
 from llm.prompts.clipping import CLIPPING_PROMPT_V1_SYSTEM
-from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
+from models import TextSegment, TranscriptionSegment
+
+# from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
 
 # Get the directory of the current script
 script_directory = Path(__file__).parent.absolute()
@@ -70,6 +72,93 @@ async def transcribe_audio(audio_s3_url: str):
     return parse_whisper_output(output)
 
 
+def get_segments_for_clip(segments, start, end):
+    clip_segments = []
+    for segment in segments:
+        if (
+            (segment.start < end and segment.start >= start)
+            or segment.end > start
+            and segment.end <= end
+        ):
+            clip_segments.append(
+                TranscriptionSegment(
+                    start=segment.start - start,
+                    end=segment.end - start,
+                    text=segment.text,
+                    word_timings=[
+                        TextSegment(
+                            start=word.start - start,
+                            end=word.end - start,
+                            text=word.text,
+                        )
+                        for word in segment.word_timings
+                    ],
+                )
+            )
+    return clip_segments
+
+
+def break_up_segments_for_subtitles(segments, max_duration=5, max_words=6, max_characters=30):
+    final_segments = []
+
+    for segment in segments:
+        if (
+            segment.end - segment.start <= max_duration
+            and len(segment.word_timings) <= max_words
+            and len(" ".join([word.text for word in segment.word_timings])) <= max_characters
+        ):
+            final_segments.append(segment)
+            continue
+
+        # break up by words or duration or both
+
+        broken_up_segments = []
+        words = [word for word in segment.word_timings]
+
+        segment = None
+        while len(words) > 0:
+            if segment and (
+                segment.end - segment.start >= max_duration
+                or len(segment.word_timings) >= max_words
+                or len(" ".join([word.text for word in segment.word_timings])) >= max_characters
+            ):
+                broken_up_segments.append(segment)
+                segment = None
+                continue
+
+            current_word = words.pop(0)
+            if segment is None:
+                segment = TranscriptionSegment(
+                    start=current_word.start,
+                    end=current_word.end,
+                    text=current_word.text,
+                    word_timings=[current_word],
+                )
+            elif (
+                len(" ".join([word.text for word in segment.word_timings]))
+                + len(current_word.text)
+                >= max_characters
+            ):
+                broken_up_segments.append(segment)
+                segment = TranscriptionSegment(
+                    start=current_word.start,
+                    end=current_word.end,
+                    text=current_word.text,
+                    word_timings=[current_word],
+                )
+            else:
+                segment.end = current_word.end
+                segment.text += " " + current_word.text
+                segment.word_timings.append(current_word)
+
+        if segment:
+            broken_up_segments.append(segment)
+
+        final_segments.extend(broken_up_segments)
+
+    return final_segments
+
+
 async def main(url: str, secondary_url: str):
     unique_id = uuid.uuid4()
 
@@ -83,6 +172,9 @@ async def main(url: str, secondary_url: str):
         output = json.loads(f.read())
 
     segments = parse_whisper_output(output)
+
+    # print(segments)
+
     # print(len(segments))
 
     # clips = await get_clips(segments, "Anything interesting")
@@ -103,6 +195,16 @@ async def main(url: str, secondary_url: str):
     # random_clip = clips[random.randint(0, len(clips) - 1)]
 
     random_clip = clips[0]
+
+    clip_segments = get_segments_for_clip(segments, random_clip["start"], random_clip["end"])
+
+    final_clip_segments = break_up_segments_for_subtitles(clip_segments)
+
+    segments_json = [a.model_dump() for a in final_clip_segments]
+
+    with open(os.path.join(script_directory, "segments.json"), "w") as f:
+        f.write(json.dumps(segments_json, indent=4))
+
     # print("clip selected", random_clip)
 
     # video_file_name = download_youtube_vod(url, resolution=1080, ext="mp4")
@@ -116,28 +218,28 @@ async def main(url: str, secondary_url: str):
 
     # await upload_file_to_s3(final_output_path, s3_object_name)
 
-    clip_duration = random_clip["end"] - random_clip["start"]
+    # clip_duration = random_clip["end"] - random_clip["start"]
 
-    info = download_youtube_info(secondary_url)
+    # info = download_youtube_info(secondary_url)
 
-    secondary_duration = info.get("duration", 0)
+    # secondary_duration = info.get("duration", 0)
 
-    if secondary_duration == 0 or secondary_duration < clip_duration:
-        raise Exception("secondary video is too short")
+    # if secondary_duration == 0 or secondary_duration < clip_duration:
+    #     raise Exception("secondary video is too short")
 
-    start = random.randint(0, secondary_duration - clip_duration)
-    end = start + clip_duration
+    # start = random.randint(0, secondary_duration - clip_duration)
+    # end = start + clip_duration
 
-    video_file_name = download_youtube_vod(
-        secondary_url, resolution=1080, info=info, ext="mp4"
-    )
-    full_video_path = os.path.join(script_directory, video_file_name)
-    final_output_path = extract_clip_2_step_mp4(full_video_path, start, end)
+    # video_file_name = download_youtube_vod(
+    #     secondary_url, resolution=1080, info=info, ext="mp4"
+    # )
+    # full_video_path = os.path.join(script_directory, video_file_name)
+    # final_output_path = extract_clip_2_step_mp4(full_video_path, start, end)
 
-    video_file_extension = os.path.splitext(final_output_path)[1]
-    s3_object_name = f"video/{unique_id}{video_file_extension}"
+    # video_file_extension = os.path.splitext(final_output_path)[1]
+    # s3_object_name = f"video/{unique_id}{video_file_extension}"
 
-    await upload_file_to_s3(final_output_path, s3_object_name)
+    # await upload_file_to_s3(final_output_path, s3_object_name)
 
     # full_video_path = os.path.join(script_directory, "tmp", "video.mp4")
 

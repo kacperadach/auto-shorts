@@ -16,11 +16,20 @@ interface VideoCompositionProps {
   durationInFrames: number;
   width: number;
   height: number;
+  highlightColor: string;
+  secondaryColor: string;
 }
 
 export function VideoComposition(props: VideoCompositionProps) {
-  const { primaryUrl, secondaryUrl, durationInFrames, width, height,  } =
-    props;
+  const {
+    primaryUrl,
+    secondaryUrl,
+    durationInFrames,
+    width,
+    height,
+    highlightColor,
+    secondaryColor,
+  } = props;
 
   return (
     <AbsoluteFill style={{ position: "relative", border: "2px solid black" }}>
@@ -48,7 +57,7 @@ export function VideoComposition(props: VideoCompositionProps) {
           muted={true}
         />
       </div>
-      <Subtitles />
+      <Subtitles highlightColor={highlightColor} secondaryColor={secondaryColor} />
     </AbsoluteFill>
   );
 }
