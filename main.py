@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import random
 import uuid
 import os
 import json
@@ -11,16 +12,19 @@ from pathlib import Path
 
 import asyncio
 
-from download import download_youtube_audio, download_youtube_info
+from download import (
+    download_youtube_audio,
+    download_youtube_info,
+    download_youtube_vod,
+    extract_clip_2_step_mp4,
+)
 from s3 import upload_file_to_s3
 from whisper import call_whisper_runpod, get_whisper_status_runpod, parse_whisper_output
 from llm.llm import (
-    format_clipping_prompt,
-    call_llama_runpod,
-    get_llama_status_runpod,
-    call_openai,
+    get_clips,
 )
 from llm.prompts.clipping import CLIPPING_PROMPT_V1_SYSTEM
+from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
 
 # Get the directory of the current script
 script_directory = Path(__file__).parent.absolute()
@@ -66,17 +70,7 @@ async def transcribe_audio(audio_s3_url: str):
     return parse_whisper_output(output)
 
 
-async def get_clips(segments, topic):
-    prompt = format_clipping_prompt(segments, topic)
-
-    print(prompt)
-    response = call_openai(
-        prompt, system_prompt=CLIPPING_PROMPT_V1_SYSTEM, model="gpt-4-1106-preview"
-    )
-    print(response)
-
-
-async def main(url: str):
+async def main(url: str, secondary_url: str):
     unique_id = uuid.uuid4()
 
     # audio_s3_url = await download_audio_and_upload_to_s3(url, unique_id)
@@ -89,16 +83,81 @@ async def main(url: str):
         output = json.loads(f.read())
 
     segments = parse_whisper_output(output)
-    print(segments)
+    # print(len(segments))
 
-    clips = await get_clips(segments[0:100], "Anything interesting")
+    # clips = await get_clips(segments, "Anything interesting")
+    # print(clips)
+
+    clips = [
+        {"start": 289.0, "end": 330.0},
+        {"start": 460.0, "end": 492.0},
+        {"start": 1114.0, "end": 1148.0},
+        {"start": 1177.0, "end": 1208.0},
+        {"start": 1231.0, "end": 1263.0},
+        {"start": 1754.0, "end": 1786.0},
+        {"start": 3699.0, "end": 3769.0},
+        {"start": 3793.0, "end": 3883.0},
+        {"start": 4857.0, "end": 4895.0},
+    ]
+
+    # random_clip = clips[random.randint(0, len(clips) - 1)]
+
+    random_clip = clips[0]
+    # print("clip selected", random_clip)
+
+    # video_file_name = download_youtube_vod(url, resolution=1080, ext="mp4")
+    # full_video_path = os.path.join(script_directory, video_file_name)
+    # final_output_path = extract_clip_2_step_mp4(
+    #     full_video_path, random_clip["start"], random_clip["end"]
+    # )
+
+    # video_file_extension = os.path.splitext(final_output_path)[1]
+    # s3_object_name = f"video/{unique_id}{video_file_extension}"
+
+    # await upload_file_to_s3(final_output_path, s3_object_name)
+
+    clip_duration = random_clip["end"] - random_clip["start"]
+
+    info = download_youtube_info(secondary_url)
+
+    secondary_duration = info.get("duration", 0)
+
+    if secondary_duration == 0 or secondary_duration < clip_duration:
+        raise Exception("secondary video is too short")
+
+    start = random.randint(0, secondary_duration - clip_duration)
+    end = start + clip_duration
+
+    video_file_name = download_youtube_vod(
+        secondary_url, resolution=1080, info=info, ext="mp4"
+    )
+    full_video_path = os.path.join(script_directory, video_file_name)
+    final_output_path = extract_clip_2_step_mp4(full_video_path, start, end)
+
+    video_file_extension = os.path.splitext(final_output_path)[1]
+    s3_object_name = f"video/{unique_id}{video_file_extension}"
+
+    await upload_file_to_s3(final_output_path, s3_object_name)
+
+    # full_video_path = os.path.join(script_directory, "tmp", "video.mp4")
+
+    # (
+    #     square_scene_boxes,
+    #     portrait_scene_boxes,
+    #     square_tracking_boxes,
+    #     portrait_tracking_boxes,
+    # ) = compute_portrait_square_bboxes_with_scenes(full_video_path)
+    # print(portrait_scene_boxes)
+
+    # I have: transcription, bounding-boxes, video clip
 
 
 if __name__ == "__main__":
 
     async def run():
         url = "https://www.youtube.com/watch?v=M-rIrn8aLuc"
-        await main(url)
+        secondary_url = "https://www.youtube.com/watch?v=dVdTWry7UNg"
+        await main(url, secondary_url)
 
     asyncio.run(run())
 

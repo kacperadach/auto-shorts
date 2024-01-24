@@ -1,6 +1,7 @@
 import os
 import subprocess
 import re
+from math import floor, ceil
 
 from yt_dlp import YoutubeDL
 
@@ -49,8 +50,8 @@ def _get_closest_available_format(
                 if (ext is None or format_.get("ext") == ext)
                 and format_.get("height") is not None
                 and format_.get("height") <= resolution
-                and format_.get("fps") is not None
-                and round(format_.get("fps")) <= fps
+                # and format_.get("fps") is not None
+                # and round(format_.get("fps")) <= fps
                 and (vcodec is None or vcodec in format_.get("vcodec", ""))
             ),
             None,
@@ -98,30 +99,58 @@ def download_youtube_info(url):
 
 
 def download_youtube_vod(url, resolution=720, info=None, ext=None, vcodec=None):
-    # def download_ranges(info_dict, ydl):
-    #     print("download_ranges")
-    #     section = {
-    #         "start_time": 100,
-    #         "end_time": 200,
-    #         "title": "First 10 seconds",
-    #         "index": 1,  # if you want to number this section
-    #     }
-    #     return [section]
-
     if not info:
         info = download_youtube_info(url)
-    print([f.get("height") for f in info["formats"]])
+
     format_ = _get_closest_available_format(
         info["formats"], resolution=resolution, fps=30, ext=ext, vcodec=vcodec
     )
+    audio_format = _get_highest_quality_audio_format(
+        info["formats"], "m4a" if format_["ext"] == "mp4" else "webm"
+    )
+
+    if not format_ or not audio_format:
+        print(f"No available formats less than resolution: {resolution}")
+        return None
+
     print(format_)
+    print(audio_format)
+
     youtube_download = DownloadHook()
 
     ydl_opts = {
         "progress_hooks": [youtube_download.get_filename],
         "paths": {"home": TMP_DIR},
+        "no_color": False,
+        "no_playlist": False,
+        "lazy_playlist": True,
+        "default_search": "ytsearch",
+        "format": format_["format_id"] + "+" + audio_format["format_id"],
+        # "external_downloader": "ffmpeg",
+        # "external_downloader_args": {
+        #     "ffmpeg_i": [
+        #         "-ss",
+        #         str(start),
+        #         "-to",
+        #         str(end),
+        #     ]
+        # },
+        "force_keyframes_at_cuts": True,
         # "download_ranges": download_ranges,
     }
+
+    # if start and end:
+    #     def download_ranges(info_dict, ydl):
+    #         print("download_ranges")
+    #         section = {
+    #             "start_time": floor(30),
+    #             "end_time": ceil(40),
+    #             "title": "",
+    #             "index": 1,
+    #         }
+    #         return [section]
+
+    #     ydl_opts["download_ranges"] = download_ranges
 
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download(url)
@@ -171,8 +200,8 @@ def extract_clip(path, start, end):
             str(start),  # Start time
             "-to",
             str(end),  # End time
-            # "-c",
-            # "copy",  # Copy the stream directly, no re-encoding
+            "-c",
+            "copy",  # Copy the stream directly, no re-encoding
             output_path,  # Output file
         ]
         # elif file_extension == ".webm":
@@ -196,6 +225,53 @@ def extract_clip(path, start, end):
         # Execute the command
         subprocess.run(command, check=True)
         print(f"Clip extracted successfully to {output_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+    except ValueError as e:
+        print(e)
+
+
+# this function first does a rough cut without re-encoding and then a precise cut with re-encoding
+def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
+    file_extension = os.path.splitext(path)[1]
+    intermediate_output_path = path.rsplit(".", 1)[0] + "_intermediate" + file_extension
+    final_output_path = path.rsplit(".", 1)[0] + "_trimmed" + file_extension
+
+    try:
+        # Step 1: Fast cut with buffer
+        fast_cut_command = [
+            "ffmpeg",
+            "-i",
+            path,  # Input file
+            "-ss",
+            str(max(0, start - buffer)),  # Start time with buffer
+            "-to",
+            str(end + buffer),  # End time with buffer
+            "-c",
+            "copy",  # Copy the stream directly, no re-encoding
+            intermediate_output_path,  # Intermediate output file
+        ]
+        subprocess.run(fast_cut_command, check=True)
+
+        # Step 2: Precise cut with re-encoding
+        precise_cut_command = [
+            "ffmpeg",
+            "-i",
+            intermediate_output_path,  # Intermediate file as input
+            "-ss",
+            str(buffer),  # Adjusted start time for precise cut
+            "-to",
+            str(end - start + buffer),  # Adjusted end time for precise cut
+            "-c:v",
+            "libx264",  # Re-encode video
+            "-c:a",
+            "aac",  # Re-encode audio
+            final_output_path,  # Final output file
+        ]
+        subprocess.run(precise_cut_command, check=True)
+
+        print(f"Clip extracted successfully to {final_output_path}")
+        return final_output_path
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
     except ValueError as e:

@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from openai import OpenAI
 
 from models import TextSegment, TranscriptionSegment
-from llm.prompts.clipping import CLIPPING_PROMPT_V1_USER
+from llm.prompts.clipping import CLIPPING_PROMPT_V1_USER, CLIPPING_PROMPT_V1_SYSTEM
 
 
 RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY")
@@ -48,6 +48,16 @@ class RunpodLlamaBody(BaseModel):
     input: LlamaInput
 
 
+def _parse_time(time_str: str):
+    # Split the time string into hours, minutes, and seconds
+    hours, minutes, seconds = map(int, time_str.split(":"))
+
+    # Calculate the total seconds
+    total_seconds = hours * 3600 + minutes * 60 + seconds
+
+    return float(total_seconds)
+
+
 def _format_time(seconds_float):
     # Convert float to integer
     total_seconds = int(seconds_float)
@@ -61,25 +71,25 @@ def _format_time(seconds_float):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def format_clipping_prompt(segments: list[TranscriptionSegment], topic: str):
-    # potentiall format timestamps
-    # formatted_segments = "\n".join(
-    #     [
-    #         f"{_format_time(floor(s.start))}-{_format_time(ceil(s.end))}:{s.text}"
-    #         for s in segments
-    #     ]
-    # )
+def format_clipping_prompt(
+    segments: list[TranscriptionSegment], topic: str, video_length: float
+):
+    formatted_segments = json.dumps(
+        [
+            {
+                "start": _format_time(floor(s.start)),
+                "end": _format_time(ceil(s.end)),
+                "text": s.text,
+            }
+            for s in segments
+        ]
+    )
 
-    formatted_segments = json.dumps([
-        {
-            "start": _format_time(floor(s.start)),
-            "end": _format_time(ceil(s.end)),
-            "text": s.text,
-        }
-        for s in segments
-    ])
-
-    return CLIPPING_PROMPT_V1_USER.format(topic=topic, transcription=formatted_segments)
+    return CLIPPING_PROMPT_V1_USER.format(
+        topic=topic,
+        transcription=formatted_segments,
+        total_video_duration=_format_time(ceil(video_length)),
+    )
 
 
 def call_llama_runpod(prompt: str):
@@ -104,7 +114,9 @@ def get_llama_status_runpod(job_id: str):
     ).json()
 
 
-def call_openai(prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5-turbo"):
+def call_openai(
+    prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5-turbo"
+):
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
@@ -118,3 +130,106 @@ def call_openai(prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5
     return client.chat.completions.create(
         model=model, messages=messages, response_format={"type": response_format}
     )
+
+
+MIN_CLIP_LENGTH = 30
+MAX_CLIP_LENGTH = 90
+
+
+def _validate_and_parse_clip_dict(clip_dict: dict):
+    if not isinstance(clip_dict, dict):
+        print("not dict")
+        return None
+
+    if not "start" in clip_dict or not "end" in clip_dict:
+        print("no start or end")
+        return None
+
+    if not isinstance(clip_dict["start"], str) or not isinstance(clip_dict["end"], str):
+        print("start or end not str")
+        return None
+
+    try:
+        start_in_secs = _parse_time(clip_dict["start"])
+        end_in_secs = _parse_time(clip_dict["end"])
+    except ValueError:
+        print("ValueError")
+        return None
+
+    if (
+        end_in_secs <= start_in_secs
+        or end_in_secs - start_in_secs < MIN_CLIP_LENGTH
+        or end_in_secs - start_in_secs > MAX_CLIP_LENGTH
+    ):
+        print("invalid start or end")
+        return None
+
+    print("valid")
+    return {"start": start_in_secs, "end": end_in_secs}
+
+
+def parse_clips_response(response):
+    try:
+        if isinstance(response, str):
+            print("str")
+            response = json.loads(response)
+
+        if isinstance(response, list):
+            print("list")
+            return [
+                parsed_clip
+                for clip in response
+                if (parsed_clip := _validate_and_parse_clip_dict(clip))
+            ]
+
+        if isinstance(response, dict):
+            print("dict")
+            if len(response.keys()) == 0:
+                print("empty dict")
+                return []
+
+            clip_key = None
+            for key in response.keys():
+                if isinstance(response[key], list):
+                    clip_key = key
+                    break
+
+            if not clip_key:
+                print("no clip key")
+                return []
+
+            return [
+                parsed_clip
+                for clip in response[clip_key]
+                if (parsed_clip := _validate_and_parse_clip_dict(clip))
+            ]
+    except Exception as e:
+        print(e)
+        return []
+
+    return []
+
+
+async def get_clips(segments, topic):
+    all_clips = []
+    batch_size = 100
+    for i in range(0, len(segments), batch_size):
+        prompt = format_clipping_prompt(
+            segments[i : i + batch_size], topic, segments[-1].end
+        )
+
+        # print(prompt)
+        response = call_openai(
+            prompt, system_prompt=CLIPPING_PROMPT_V1_SYSTEM, model="gpt-4-1106-preview"
+        )
+        print(response.choices[0].message.content)
+        new_clips = parse_clips_response(response.choices[0].message.content)
+        print("new clips", new_clips)
+
+        all_clips.extend(new_clips)
+
+    return all_clips
+
+
+if __name__ == "__main__":
+    parse_clips_response("")
