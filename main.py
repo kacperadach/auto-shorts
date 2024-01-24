@@ -26,7 +26,7 @@ from llm.llm import (
 from llm.prompts.clipping import CLIPPING_PROMPT_V1_SYSTEM
 from models import TextSegment, TranscriptionSegment
 
-# from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
+from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
 
 # Get the directory of the current script
 script_directory = Path(__file__).parent.absolute()
@@ -98,14 +98,17 @@ def get_segments_for_clip(segments, start, end):
     return clip_segments
 
 
-def break_up_segments_for_subtitles(segments, max_duration=5, max_words=6, max_characters=30):
+def break_up_segments_for_subtitles(
+    segments, max_duration=5, max_words=6, max_characters=30
+):
     final_segments = []
 
     for segment in segments:
         if (
             segment.end - segment.start <= max_duration
             and len(segment.word_timings) <= max_words
-            and len(" ".join([word.text for word in segment.word_timings])) <= max_characters
+            and len(" ".join([word.text for word in segment.word_timings]))
+            <= max_characters
         ):
             final_segments.append(segment)
             continue
@@ -120,7 +123,8 @@ def break_up_segments_for_subtitles(segments, max_duration=5, max_words=6, max_c
             if segment and (
                 segment.end - segment.start >= max_duration
                 or len(segment.word_timings) >= max_words
-                or len(" ".join([word.text for word in segment.word_timings])) >= max_characters
+                or len(" ".join([word.text for word in segment.word_timings]))
+                >= max_characters
             ):
                 broken_up_segments.append(segment)
                 segment = None
@@ -196,22 +200,24 @@ async def main(url: str, secondary_url: str):
 
     random_clip = clips[0]
 
-    clip_segments = get_segments_for_clip(segments, random_clip["start"], random_clip["end"])
+    # clip_segments = get_segments_for_clip(
+    #     segments, random_clip["start"], random_clip["end"]
+    # )
 
-    final_clip_segments = break_up_segments_for_subtitles(clip_segments)
+    # final_clip_segments = break_up_segments_for_subtitles(clip_segments)
 
-    segments_json = [a.model_dump() for a in final_clip_segments]
+    # segments_json = [a.model_dump() for a in final_clip_segments]
 
-    with open(os.path.join(script_directory, "segments.json"), "w") as f:
-        f.write(json.dumps(segments_json, indent=4))
+    # with open(os.path.join(script_directory, "segments.json"), "w") as f:
+    #     f.write(json.dumps(segments_json, indent=4))
 
     # print("clip selected", random_clip)
 
-    # video_file_name = download_youtube_vod(url, resolution=1080, ext="mp4")
-    # full_video_path = os.path.join(script_directory, video_file_name)
-    # final_output_path = extract_clip_2_step_mp4(
-    #     full_video_path, random_clip["start"], random_clip["end"]
-    # )
+    video_file_name = download_youtube_vod(url, resolution=1080, ext="mp4")
+    full_video_path = os.path.join(script_directory, video_file_name)
+    final_output_path = extract_clip_2_step_mp4(
+        full_video_path, random_clip["start"], random_clip["end"]
+    )
 
     # video_file_extension = os.path.splitext(final_output_path)[1]
     # s3_object_name = f"video/{unique_id}{video_file_extension}"
@@ -243,15 +249,23 @@ async def main(url: str, secondary_url: str):
 
     # full_video_path = os.path.join(script_directory, "tmp", "video.mp4")
 
-    # (
-    #     square_scene_boxes,
-    #     portrait_scene_boxes,
-    #     square_tracking_boxes,
-    #     portrait_tracking_boxes,
-    # ) = compute_portrait_square_bboxes_with_scenes(full_video_path)
-    # print(portrait_scene_boxes)
+    (
+        square_scene_boxes,
+        portrait_scene_boxes,
+        square_tracking_boxes,
+        portrait_tracking_boxes,
+    ) = compute_portrait_square_bboxes_with_scenes(final_output_path)
 
-    # I have: transcription, bounding-boxes, video clip
+    print(portrait_scene_boxes)
+
+    # Convert each namedtuple in the list to a dictionary
+    portrait_scene_boxes_dicts = [bbox._asdict() for bbox in portrait_scene_boxes]
+
+    # Now write the list of dictionaries to a JSON file
+    json_output_path = os.path.join(script_directory, "portrait_scene_boxes.json")
+    with open(json_output_path, "w") as f:
+        json.dump(portrait_scene_boxes_dicts, f, indent=4)
+
 
 
 if __name__ == "__main__":
