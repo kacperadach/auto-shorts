@@ -10,6 +10,9 @@ import {
   delayRender,
 } from "remotion";
 import { VideoComposition } from "./VideoComposition";
+import segments from "./segments.json";
+import portraitSceneBoxes from "./portrait_scene_boxes.json";
+import { CroppingBox } from "../lib/types";
 
 const FPS = 30;
 
@@ -44,11 +47,12 @@ export function VideoPlayer() {
             <VideoComposition
               primaryUrl={PRIMARY_URL}
               secondaryUrl={SECONDARY_URL}
-              durationInFrames={DURATION * FPS}
               width={1080}
               height={1920}
               highlightColor="#33FF52"
               secondaryColor="#FF3352"
+              segments={segments}
+              croppingBoxes={portraitSceneBoxes}
             />
           ),
           []

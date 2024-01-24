@@ -1,27 +1,23 @@
 import { useMemo } from "react";
 
-import segments from "./segments.json";
 import {
   useCurrentFrame,
   useVideoConfig,
-  AbsoluteFill,
-  Sequence,
-  Series,
-  continueRender,
-  delayRender,
 } from "remotion";
 import { generateFullLongShadow } from "../lib/textShadow";
+import { SubtitleSegment } from "../lib/types";
 
 const MAX_FONT_MULTIPLIER = 1.75;
 const BASE_FONT = 72;
 
 interface SubtitlesProps {
+  segments: SubtitleSegment[];
   highlightColor: string;
   secondaryColor: string;
 }
 
 export function Subtitles(props: SubtitlesProps) {
-  const { highlightColor, secondaryColor } = props;
+  const { segments, highlightColor, secondaryColor } = props;
   const currentFrame = useCurrentFrame();
 
   const fps = useVideoConfig().fps;
