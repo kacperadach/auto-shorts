@@ -1,14 +1,18 @@
 import os
+from time import sleep
 
 import requests
 from pydantic import BaseModel
 
 from models import TextSegment, TranscriptionSegment
+from runpod import call_and_poll_runpod
 
 
-RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY")
-RUNPOD_URL = "https://api.runpod.ai/v2/faster-whisper/run"
-RUNPOD_STATUS_URL = "https://api.runpod.ai/v2/faster-whisper/status/"
+# RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY")
+# RUNPOD_URL = "https://api.runpod.ai/v2/faster-whisper/run"
+# RUNPOD_STATUS_URL = "https://api.runpod.ai/v2/faster-whisper/status/"
+
+MODEL_ID = "faster-whisper"
 
 
 class WhisperInput(BaseModel):
@@ -36,26 +40,26 @@ class WhisperBody(BaseModel):
     enable_vad: bool = False
 
 
-def call_whisper_runpod(audio_file_path: str):
-    body = WhisperBody(
-        input=WhisperInput(audio=audio_file_path, transcription=None, word_timestamps=True)
-    )
-    response = requests.post(
-        RUNPOD_URL,
-        json=body.dict(),
-        headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
-        timeout=30000,
-    )
-    print(response.json())
-    return response.json()
+# def call_whisper_runpod(audio_file_path: str):
+#     body = WhisperBody(
+#         input=WhisperInput(audio=audio_file_path, transcription=None, word_timestamps=True)
+#     )
+#     response = requests.post(
+#         RUNPOD_URL,
+#         json=body.dict(),
+#         headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
+#         timeout=30000,
+#     )
+#     print(response.json())
+#     return response.json()
 
 
-def get_whisper_status_runpod(job_id: str):
-    return requests.get(
-        RUNPOD_STATUS_URL + job_id,
-        headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
-        timeout=30000,
-    ).json()
+# def get_whisper_status_runpod(job_id: str):
+#     return requests.get(
+#         RUNPOD_STATUS_URL + job_id,
+#         headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
+#         timeout=30000,
+#     ).json()
 
 
 def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
@@ -105,3 +109,12 @@ def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
     print(word_index)
 
     return output_segments
+
+
+async def transcribe_audio(audio_s3_url: str):
+    body = WhisperBody(
+        input=WhisperInput(audio=audio_s3_url, transcription=None, word_timestamps=True)
+    )
+    output = call_and_poll_runpod(MODEL_ID, body.dict())
+    if output:
+        return parse_whisper_output(output)

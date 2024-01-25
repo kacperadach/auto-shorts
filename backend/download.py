@@ -119,6 +119,7 @@ def download_youtube_vod(url, resolution=720, info=None, ext=None, vcodec=None):
     youtube_download = DownloadHook()
 
     ydl_opts = {
+        **DEFAULT_YT_DLP_ARGS,
         "progress_hooks": [youtube_download.get_filename],
         "paths": {"home": TMP_DIR},
         "no_color": False,

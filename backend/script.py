@@ -19,14 +19,17 @@ from download import (
     extract_clip_2_step_mp4,
 )
 from s3 import upload_file_to_s3
-from whisper import call_whisper_runpod, get_whisper_status_runpod, parse_whisper_output
+from whisper import (
+    parse_whisper_output,
+    transcribe_audio,
+)
 from llm.llm import (
     get_clips,
 )
 from llm.prompts.clipping import CLIPPING_PROMPT_V1_SYSTEM
 from models import TextSegment, TranscriptionSegment
 
-from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
+# from aspect_ratio.conversion import compute_portrait_square_bboxes_with_scenes
 from render import render_short
 from upload.youtube import (
     get_access_token_for_youtube,
@@ -47,33 +50,6 @@ async def download_audio_and_upload_to_s3(url, unique_id):
     s3_object_name = f"audio/{unique_id}{audio_file_extension}"
     await upload_file_to_s3(full_audio_path, s3_object_name)
     return S3_URL + s3_object_name
-
-
-async def transcribe_audio(audio_s3_url: str):
-    response = call_whisper_runpod(audio_s3_url)
-    sleep(2)
-
-    output = None
-    finished = False
-    while not finished:
-        body = get_whisper_status_runpod(response["id"])
-        status = body["status"]
-        if status == "FAILED":
-            print("FAILED")
-            break
-
-        if status == "COMPLETED":
-            print("COMPLETED")
-            output = body["output"]
-            break
-
-        sleep(2)
-
-    # print(output)
-    # with open(os.path.join(script_directory, "whisper_output.json"), "w") as f:
-    #     f.write(json.dumps(output, indent=4))
-
-    return parse_whisper_output(output)
 
 
 def get_segments_for_clip(segments, start, end):
@@ -102,17 +78,14 @@ def get_segments_for_clip(segments, start, end):
     return clip_segments
 
 
-def break_up_segments_for_subtitles(
-    segments, max_duration=5, max_words=6, max_characters=30
-):
+def break_up_segments_for_subtitles(segments, max_duration=5, max_words=6, max_characters=30):
     final_segments = []
 
     for segment in segments:
         if (
             segment.end - segment.start <= max_duration
             and len(segment.word_timings) <= max_words
-            and len(" ".join([word.text for word in segment.word_timings]))
-            <= max_characters
+            and len(" ".join([word.text for word in segment.word_timings])) <= max_characters
         ):
             final_segments.append(segment)
             continue
@@ -127,8 +100,7 @@ def break_up_segments_for_subtitles(
             if segment and (
                 segment.end - segment.start >= max_duration
                 or len(segment.word_timings) >= max_words
-                or len(" ".join([word.text for word in segment.word_timings]))
-                >= max_characters
+                or len(" ".join([word.text for word in segment.word_timings])) >= max_characters
             ):
                 broken_up_segments.append(segment)
                 segment = None
@@ -177,10 +149,17 @@ def break_up_segments_for_subtitles(
 # upload video to youtube (youtube api) + instagram (instagram api)
 
 
-async def download_video_and_upload_to_s3(url: str, unique_id: str):
+async def clip_and_upload_to_s3(
+    video_path: str, unique_id: str, start: int, end: int, primary: bool
+):
+    final_output_path = extract_clip_2_step_mp4(video_path, start, end)
+    video_file_extension = os.path.splitext(final_output_path)[1]
+    video_type = "primary" if primary else "secondary"
+    s3_object_name = f"video/{unique_id}_{video_type}_{start}_{end}{video_file_extension}"
+    return await upload_file_to_s3(final_output_path, s3_object_name)
 
 
-async def run(primary_url: str, secondary_url: str, clip_topic: str):
+async def run(primary_url: str, secondary_url: str, clip_topic: str, max_clips=6):
     unique_id = str(uuid.uuid4())
 
     print(f"Downloading audio for {primary_url}")
@@ -199,16 +178,62 @@ async def run(primary_url: str, secondary_url: str, clip_topic: str):
     print(f"Found {len(clips)} clips for {primary_url}: {clip_topic}")
     print(clips)
 
-    # video_file_name = download_youtube_vod(url, resolution=1080, ext="mp4")
-    # full_video_path = os.path.join(script_directory, video_file_name)
-    # final_output_path = extract_clip_2_step_mp4(
-    #     full_video_path, random_clip["start"], random_clip["end"]
-    # )
+    # TODO: is there a better way to decide? LLM?
+    clips = clips[:max_clips]
+    print(f"Using clips: {clips}")
 
-    # video_file_extension = os.path.splitext(final_output_path)[1]
-    # s3_object_name = f"video/{unique_id}{video_file_extension}"
+    print(f"Downloading primary video for {primary_url}")
+    primary_file_name = download_youtube_vod(primary_url, resolution=1080, ext="mp4")
+    if not primary_file_name:
+        print(f"Failed to download primary video for {primary_url}")
+        return
 
-    # await upload_file_to_s3(final_output_path, s3_object_name)
+    full_primary_file_path = os.path.join(script_directory, primary_file_name)
+
+    secondary_file_name = download_youtube_vod(secondary_url, resolution=1080, ext="mp4")
+    if not secondary_file_name:
+        print(f"Failed to download secondary video for {secondary_url}")
+        return
+
+    full_secondary_file_path = os.path.join(script_directory, secondary_file_name)
+
+    rendered_clips = []
+    for clip in clips:
+        print(f"Calculating bounding boxes for {primary_url}: {clip}")
+        (
+            _,
+            portrait_scene_boxes,
+            _,
+            _,
+        ) = compute_portrait_square_bboxes_with_scenes(full_primary_file_path)
+
+        portrait_bounding_boxes = [bbox._asdict() for bbox in portrait_scene_boxes]
+
+        print(f"Clipping primary video from {clip['start']} to {clip['end']}: {primary_s3_url}")
+        primary_s3_url = clip_and_upload_to_s3(
+            full_primary_file_path, unique_id, clip["start"], clip["end"], True
+        )
+
+        print(
+            f"Clipping secondary video from {clip['start']} to {clip['end']}: {secondary_s3_url}"
+        )
+        secondary_s3_url = clip_and_upload_to_s3(
+            full_secondary_file_path, unique_id, clip["start"], clip["end"], False
+        )
+
+        print(f"Rendering video for {primary_url}: {clip}")
+        short_url = render_short(
+            primary_url=primary_s3_url,
+            secondary_url=secondary_s3_url,
+            durationInSeconds=clip["end"] - clip["start"],
+            segments=segments,
+            cropping_boxes=portrait_scene_boxes,
+        )
+        print(f"Rendered video: {short_url}")
+
+        rendered_clips.append(short_url)
+
+    # TODO: post clips directly to youtube/instagram
 
 
 async def main(url: str, secondary_url: str):
@@ -248,9 +273,7 @@ async def main(url: str, secondary_url: str):
 
     random_clip = clips[0]
 
-    clip_segments = get_segments_for_clip(
-        segments, random_clip["start"], random_clip["end"]
-    )
+    clip_segments = get_segments_for_clip(segments, random_clip["start"], random_clip["end"])
 
     final_clip_segments = break_up_segments_for_subtitles(clip_segments)
 
