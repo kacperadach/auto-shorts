@@ -1,9 +1,6 @@
 import { useMemo } from "react";
 
-import {
-  useCurrentFrame,
-  useVideoConfig,
-} from "remotion";
+import { useCurrentFrame, useVideoConfig } from "remotion";
 import { generateFullLongShadow } from "../lib/textShadow";
 import { SubtitleSegment } from "../lib/types";
 
@@ -66,6 +63,11 @@ export function Subtitles(props: SubtitlesProps) {
         width: "80%",
         fontFamily: "Helvetica",
         fontWeight: "bold",
+        textAlign: "center",
+        display: "flex",
+        whiteSpace: "pre",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       {currentSegment &&

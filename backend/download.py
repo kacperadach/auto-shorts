@@ -1,5 +1,7 @@
 import os
 import subprocess
+import shutil
+import tempfile
 import re
 from math import floor, ceil
 
@@ -113,9 +115,6 @@ def download_youtube_vod(url, resolution=720, info=None, ext=None, vcodec=None):
         print(f"No available formats less than resolution: {resolution}")
         return None
 
-    print(format_)
-    print(audio_format)
-
     youtube_download = DownloadHook()
 
     ydl_opts = {
@@ -175,10 +174,10 @@ def download_youtube_audio(url, info=None, audio_ext="m4a"):
         info = download_youtube_info(url)
 
     audio_format = _get_highest_quality_audio_format(info["formats"], audio_ext)
-    print(audio_format)
 
     youtube_download = DownloadHook()
     ydl_opts = {
+        **DEFAULT_YT_DLP_ARGS,
         "progress_hooks": [youtube_download.get_filename],
         "format": audio_format["format_id"],
     }
@@ -190,6 +189,7 @@ def download_youtube_audio(url, info=None, audio_ext="m4a"):
 
 def extract_clip(path, start, end):
     file_extension = os.path.splitext(path)[1]
+
     output_path = path.rsplit(".", 1)[0] + "_trimmed" + file_extension
     try:
         # if file_extension == ".mp4":
@@ -235,9 +235,14 @@ def extract_clip(path, start, end):
 # this function first does a rough cut without re-encoding and then a precise cut with re-encoding
 def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
     file_extension = os.path.splitext(path)[1]
-    intermediate_output_path = path.rsplit(".", 1)[0] + "_intermediate" + file_extension
-    final_output_path = path.rsplit(".", 1)[0] + "_trimmed" + file_extension
+    intermediate_output_path = (
+        path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_intermediate" + file_extension
+    )
+    final_output_path = path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_trimmed" + file_extension
 
+    # with tempfile.NamedTemporaryFile(suffix=file_extension, delete=True) as temp_file:
+    #     shutil.copy2(path, temp_file.name)
+    #     temp_input_path = temp_file.name
     try:
         # Step 1: Fast cut with buffer
         fast_cut_command = [

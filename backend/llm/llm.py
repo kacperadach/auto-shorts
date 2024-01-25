@@ -102,7 +102,6 @@ def call_llama_runpod(prompt: str):
         headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
         timeout=30000,
     )
-    print(response.json())
     return response.json()
 
 
@@ -114,9 +113,7 @@ def get_llama_status_runpod(job_id: str):
     ).json()
 
 
-def call_openai(
-    prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5-turbo"
-):
+def call_openai(prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5-turbo"):
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
@@ -138,22 +135,18 @@ MAX_CLIP_LENGTH = 90
 
 def _validate_and_parse_clip_dict(clip_dict: dict):
     if not isinstance(clip_dict, dict):
-        print("not dict")
         return None
 
     if not "start" in clip_dict or not "end" in clip_dict:
-        print("no start or end")
         return None
 
     if not isinstance(clip_dict["start"], str) or not isinstance(clip_dict["end"], str):
-        print("start or end not str")
         return None
 
     try:
         start_in_secs = _parse_time(clip_dict["start"])
         end_in_secs = _parse_time(clip_dict["end"])
     except ValueError:
-        print("ValueError")
         return None
 
     if (
@@ -161,21 +154,17 @@ def _validate_and_parse_clip_dict(clip_dict: dict):
         or end_in_secs - start_in_secs < MIN_CLIP_LENGTH
         or end_in_secs - start_in_secs > MAX_CLIP_LENGTH
     ):
-        print("invalid start or end")
         return None
 
-    print("valid")
     return {"start": start_in_secs, "end": end_in_secs}
 
 
 def parse_clips_response(response):
     try:
         if isinstance(response, str):
-            print("str")
             response = json.loads(response)
 
         if isinstance(response, list):
-            print("list")
             return [
                 parsed_clip
                 for clip in response
@@ -183,9 +172,7 @@ def parse_clips_response(response):
             ]
 
         if isinstance(response, dict):
-            print("dict")
             if len(response.keys()) == 0:
-                print("empty dict")
                 return []
 
             clip_key = None
@@ -195,7 +182,6 @@ def parse_clips_response(response):
                     break
 
             if not clip_key:
-                print("no clip key")
                 return []
 
             return [
@@ -214,19 +200,15 @@ async def get_clips(segments, topic):
     all_clips = []
     batch_size = 100
     for i in range(0, len(segments), batch_size):
-        prompt = format_clipping_prompt(
-            segments[i : i + batch_size], topic, segments[-1].end
-        )
+        prompt = format_clipping_prompt(segments[i : i + batch_size], topic, segments[-1].end)
 
-        # print(prompt)
         response = call_openai(
             prompt, system_prompt=CLIPPING_PROMPT_V1_SYSTEM, model="gpt-4-1106-preview"
         )
-        print(response.choices[0].message.content)
         new_clips = parse_clips_response(response.choices[0].message.content)
-        print("new clips", new_clips)
-
-        all_clips.extend(new_clips)
+        if new_clips:
+            print("new clips", new_clips)
+            all_clips.extend(new_clips)
 
     return all_clips
 

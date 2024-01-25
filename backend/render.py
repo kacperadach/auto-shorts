@@ -78,10 +78,9 @@ def render_short(
         render_id=render_response.render_id, bucket_name=render_response.bucket_name
     )
     while progress_response and not progress_response.done:
-        sleep(15)
+        sleep(5)
         print("Overall progress")
         print(str(progress_response.overallProgress * 100) + "%")
-        print(progress_response)
         progress_response = client.get_render_progress(
             render_id=render_response.render_id,
             bucket_name=render_response.bucket_name,

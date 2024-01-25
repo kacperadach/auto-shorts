@@ -40,28 +40,6 @@ class WhisperBody(BaseModel):
     enable_vad: bool = False
 
 
-# def call_whisper_runpod(audio_file_path: str):
-#     body = WhisperBody(
-#         input=WhisperInput(audio=audio_file_path, transcription=None, word_timestamps=True)
-#     )
-#     response = requests.post(
-#         RUNPOD_URL,
-#         json=body.dict(),
-#         headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
-#         timeout=30000,
-#     )
-#     print(response.json())
-#     return response.json()
-
-
-# def get_whisper_status_runpod(job_id: str):
-#     return requests.get(
-#         RUNPOD_STATUS_URL + job_id,
-#         headers={"Authorization": "Bearer " + RUNPOD_API_KEY},
-#         timeout=30000,
-#     ).json()
-
-
 def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
     output_segments = []
 
@@ -88,15 +66,6 @@ def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
             )
             word_index += 1
 
-        # if not word_timings:
-        #     print(output["segments"][index - 1])
-        #     print(segment)
-        #     try:
-        #         print(output["word_timestamps"][word_index])
-        #     except Exception:
-        #         pass
-        #     raise Exception("No word timings found for segment")
-
         output_segments.append(
             TranscriptionSegment(
                 start=segment["start"],
@@ -105,8 +74,6 @@ def parse_whisper_output(output: dict) -> list[TranscriptionSegment]:
                 word_timings=word_timings,
             )
         )
-
-    print(word_index)
 
     return output_segments
 

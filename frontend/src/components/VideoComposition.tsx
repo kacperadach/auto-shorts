@@ -27,11 +27,13 @@ export function VideoComposition(props: VideoCompositionProps) {
   } = props;
 
   return (
-    <AbsoluteFill style={{ position: "relative", border: "2px solid black" }}>
+    <AbsoluteFill style={{ position: "relative" }}>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
           width: "100%",
           height: "100%",
         }}
