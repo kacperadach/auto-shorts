@@ -13,6 +13,7 @@ import { VideoComposition } from "./VideoComposition";
 import segments from "./segments.json";
 import portraitSceneBoxes from "./portrait_scene_boxes.json";
 import { CroppingBox } from "../lib/types";
+import { initiate_oauth, initiate_oauth_facebook } from "../lib/api";
 
 const FPS = 30;
 
@@ -74,6 +75,42 @@ export function VideoPlayer() {
           }}
         >
           Play
+        </button>
+      </div>
+      <div>
+        <button
+          style={{ fontSize: "64px" }}
+          onClick={async () => {
+            const response = await initiate_oauth();
+            if (!response.success) {
+              console.log("Failed to initiate oauth");
+              return;
+            }
+
+            const { auth_url } = response.data;
+
+            window.open(auth_url, "_blank");
+          }}
+        >
+          Initiate OAuth Google
+        </button>
+      </div>
+      <div>
+        <button
+          style={{ fontSize: "64px" }}
+          onClick={async () => {
+            const response = await initiate_oauth_facebook();
+            if (!response.success) {
+              console.log("Failed to initiate oauth");
+              return;
+            }
+
+            const { auth_url } = response.data;
+
+            window.open(auth_url, "_blank");
+          }}
+        >
+          Initiate OAuth Facebook
         </button>
       </div>
     </div>
