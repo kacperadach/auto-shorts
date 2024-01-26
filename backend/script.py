@@ -80,14 +80,17 @@ def get_segments_for_clip(segments, start, end):
     return clip_segments
 
 
-def break_up_segments_for_subtitles(segments, max_duration=5, max_words=4, max_characters=30):
+def break_up_segments_for_subtitles(
+    segments, max_duration=5, max_words=4, max_characters=30
+):
     final_segments = []
 
     for segment in segments:
         if (
             segment.end - segment.start <= max_duration
             and len(segment.word_timings) <= max_words
-            and len(" ".join([word.text for word in segment.word_timings])) <= max_characters
+            and len(" ".join([word.text for word in segment.word_timings]))
+            <= max_characters
         ):
             final_segments.append(segment)
             continue
@@ -102,7 +105,8 @@ def break_up_segments_for_subtitles(segments, max_duration=5, max_words=4, max_c
             if segment and (
                 segment.end - segment.start >= max_duration
                 or len(segment.word_timings) >= max_words
-                or len(" ".join([word.text for word in segment.word_timings])) >= max_characters
+                or len(" ".join([word.text for word in segment.word_timings]))
+                >= max_characters
             ):
                 broken_up_segments.append(segment)
                 segment = None
@@ -159,7 +163,9 @@ async def clip_and_upload_to_s3(
     final_output_path = extract_clip_2_step_mp4(video_path, start, end)
     video_file_extension = os.path.splitext(final_output_path)[1]
     video_type = "primary" if primary else "secondary"
-    s3_object_name = f"video/{unique_id}_{video_type}_{start}_{end}{video_file_extension}"
+    s3_object_name = (
+        f"video/{unique_id}_{video_type}_{start}_{end}{video_file_extension}"
+    )
     return await upload_file_to_s3(final_output_path, s3_object_name)
 
 
@@ -216,7 +222,12 @@ async def run(primary_url: str, secondary_url: str, clip_topic: str, max_clips=6
 
     rendered_clips = []
     for clip in clips:
-        clip_segments = get_segments_for_clip(subtitle_segments, clip["start"], clip["end"])
+        clip_segments = get_segments_for_clip(
+            subtitle_segments, clip["start"], clip["end"]
+        )
+        print(
+            f"Segments for clip from {clip['start']} to {clip['end']}: {clip_segments}"
+        )
         print(
             f"Clipping primary video from {clip['start']} to {clip['end']}: {full_primary_file_path}"
         )
@@ -390,10 +401,10 @@ if __name__ == "__main__":
     async def run_async():
         # 23.710 - before Runpod balance
         # 23.654 - after Runpod balance
-        
-        url = "https://www.youtube.com/watch?v=eNpkhX85yf0"
-        secondary_url = "https://www.youtube.com/watch?v=n_Dv4JMiwK8"
-        await run(url, secondary_url, "Funny Moments")
+
+        url = "https://www.youtube.com/watch?v=TNyPVm5AVoo"
+        secondary_url = "https://www.youtube.com/watch?v=q9BtYEnrkg4"
+        await run(url, secondary_url, "fashion")
 
     asyncio.run(run_async())
 

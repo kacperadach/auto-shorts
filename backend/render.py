@@ -4,6 +4,9 @@ from time import sleep
 from remotion_lambda import RenderMediaParams, Privacy, ValidStillImageFormats
 from remotion_lambda import RemotionClient
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Load env variables
 REMOTION_APP_REGION = os.getenv("REMOTION_APP_REGION")
@@ -21,19 +24,6 @@ client = RemotionClient(
     serve_url=REMOTION_APP_SERVE_URL,
     function_name=REMOTION_APP_FUNCTION_NAME,
 )
-
-
-# primaryUrl: string;
-# secondaryUrl: string;
-# durationInSeconds: number;
-# width: number;
-# height: number;
-# highlightColor: string;
-# secondaryColor: string;
-# segments: SubtitleSegment[];
-# croppingBoxes: CroppingBox[];
-# highlightColor="#33FF52"
-# secondaryColor="#FF3352"
 
 
 class RenderException(Exception):
@@ -86,4 +76,27 @@ def render_short(
             bucket_name=render_response.bucket_name,
         )
     print("Render done!", progress_response.outputFile)
+    print(f"Costs: {progress_response.costs}")
+
     return progress_response.outputFile
+
+
+if __name__ == "__main__":
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    import os
+    import json
+    from pathlib import Path
+
+    script_directory = Path(__file__).parent.absolute()
+    with open(os.path.join(script_directory, "segments.json"), "r") as f:
+        segments = json.load(f)
+
+    render_short(
+        "https://auto-shorts-storage.s3.amazonaws.com/video/0653e81d-bbfc-4ef4-8ea5-3e41dafb14d8_primary_984.0_1026.0.mp4",
+        "https://auto-shorts-storage.s3.amazonaws.com/video/1332f5f0-851f-494e-afee-95a1cc1e95be_secondary_45_98.0.mp4",
+        30,
+        segments,
+        [],
+    )
