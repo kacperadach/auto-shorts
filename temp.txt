@@ -9,3 +9,7 @@ ADHD
 
 https://www.youtube.com/@Gojzer/videos
 https://www.youtube.com/@TalisaTossell
+
+
+primary - #0B3C5D
+secondary - #2C3539

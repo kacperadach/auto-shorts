@@ -238,26 +238,33 @@ def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
     intermediate_output_path = (
         path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_intermediate" + file_extension
     )
-    final_output_path = path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_trimmed" + file_extension
+    final_output_path = (
+        path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_trimmed" + file_extension
+    )
 
     # with tempfile.NamedTemporaryFile(suffix=file_extension, delete=True) as temp_file:
     #     shutil.copy2(path, temp_file.name)
     #     temp_input_path = temp_file.name
     try:
-        # Step 1: Fast cut with buffer
+        adjusted_start_time = max(0, start - buffer)
+        adjusted_end_time = end + buffer
+        #  Step 1: Fast cut with buffer
         fast_cut_command = [
             "ffmpeg",
             "-i",
             path,  # Input file
             "-ss",
-            str(max(0, start - buffer)),  # Start time with buffer
+            str(adjusted_start_time),  # Start time with buffer
             "-to",
-            str(end + buffer),  # End time with buffer
+            str(adjusted_end_time),  # End time with buffer
             "-c",
             "copy",  # Copy the stream directly, no re-encoding
             intermediate_output_path,  # Intermediate output file
         ]
         subprocess.run(fast_cut_command, check=True)
+
+        precise_start_time = buffer if start > buffer else start
+        precise_end_time = end - start + buffer
 
         # Step 2: Precise cut with re-encoding
         precise_cut_command = [
@@ -265,9 +272,9 @@ def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
             "-i",
             intermediate_output_path,  # Intermediate file as input
             "-ss",
-            str(buffer),  # Adjusted start time for precise cut
+            str(precise_start_time),  # Adjusted start time for precise cut
             "-to",
-            str(end - start + buffer),  # Adjusted end time for precise cut
+            str(precise_end_time),  # Adjusted end time for precise cut
             "-c:v",
             "libx264",  # Re-encode video
             "-c:a",
@@ -282,3 +289,13 @@ def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
         print(f"An error occurred: {e}")
     except ValueError as e:
         print(e)
+
+
+if __name__ == "__main__":
+    import os
+    from pathlib import Path
+
+
+    script_directory = Path(__file__).parent.absolute()
+    # download_youtube_vod("https://www.youtube.com/watch?v=TNyPVm5AVoo", resolution=1080, ext="mp4")
+    extract_clip_2_step_mp4(os.path.join("/tmp", "video.mp4"), 15, 45, buffer=5)
