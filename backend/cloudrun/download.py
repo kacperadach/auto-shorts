@@ -155,6 +155,10 @@ def download_youtube_vod(url, resolution=720, info=None, ext=None, vcodec=None):
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download(url)
 
+    if not youtube_download.filename:
+        print("No filename found")
+        return None
+
     return re.sub(r"\.f\d+", "", youtube_download.filename)
 
 
@@ -178,6 +182,7 @@ def download_youtube_audio(url, info=None, audio_ext="m4a"):
     youtube_download = DownloadHook()
     ydl_opts = {
         **DEFAULT_YT_DLP_ARGS,
+        "paths": {"home": TMP_DIR},
         "progress_hooks": [youtube_download.get_filename],
         "format": audio_format["format_id"],
     }
@@ -236,9 +241,17 @@ def extract_clip(path, start, end):
 def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
     file_extension = os.path.splitext(path)[1]
     intermediate_output_path = (
-        path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_intermediate" + file_extension
+        path.rsplit(".", 1)[0]
+        + f"_{int(start)}_{int(end)}"
+        + "_intermediate"
+        + file_extension
     )
-    final_output_path = path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_trimmed" + file_extension
+    final_output_path = (
+        path.rsplit(".", 1)[0]
+        + f"_{int(start)}_{int(end)}"
+        + "_trimmed"
+        + file_extension
+    )
 
     # with tempfile.NamedTemporaryFile(suffix=file_extension, delete=True) as temp_file:
     #     shutil.copy2(path, temp_file.name)

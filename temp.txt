@@ -1,11 +1,10 @@
+# TODO:
 
-https://www.youtube.com/@Emiliascloset/videos
-https://www.youtube.com/@youdri/videos
-https://www.youtube.com/@Queen_Adele/videos
-https://www.youtube.com/@StellaCardoCC/videos
+- logo
 
+- setup default repo first, to get ball rolling and have database to use
+- marketing page with waiting list functionality, link to it from social media
 
-ADHD
-
-https://www.youtube.com/@Gojzer/videos
-https://www.youtube.com/@TalisaTossell
+- setup script in cloud, send finished renders to Slack
+- figure out event-driven architecture for subscribed channels, invoke script to run on new upload
+- figure out automatic upload
