@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class TextSegment(BaseModel):
     start: float
     end: float

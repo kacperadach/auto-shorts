@@ -4,23 +4,42 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from script import run
+from shared.upload import upload_video
 
 app = FastAPI()
 
 
 class AutoRepurposeRequest(BaseModel):
-    primary_youtube_url: str
-    secondary_youtube_url: str
-    topic: str
+    run_id: str
+    video_id: str
+    channel_id: str
+    is_manual: bool
 
 
 @app.post("/run")
 async def auto_repurpose(repurpose_request: AutoRepurposeRequest):
     print(f"Received request: {repurpose_request}")
     await run(
-        repurpose_request.primary_youtube_url,
-        repurpose_request.secondary_youtube_url,
-        repurpose_request.topic,
+        repurpose_request.run_id,
+        repurpose_request.video_id,
+        repurpose_request.channel_id,
+        repurpose_request.is_manual,
+    )
+
+
+class UploadRequest(BaseModel):
+    repurposer_id: str
+    rendered_video_id: str
+    s3_url: str
+
+
+@app.post("/upload")
+async def upload_video_cloudrun(upload_request: UploadRequest):
+    print(f"Received upload request: {upload_request}")
+    upload_video(
+        upload_request.s3_url,
+        upload_request.repurposer_id,
+        upload_request.rendered_video_id,
     )
 
 

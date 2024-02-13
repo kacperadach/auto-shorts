@@ -8,7 +8,16 @@ from pydantic import BaseModel
 from openai import OpenAI
 
 from models import TextSegment, TranscriptionSegment
-from llm.prompts.clipping import CLIPPING_PROMPT_V1_USER, CLIPPING_PROMPT_V1_SYSTEM
+from llm.prompts.clipping import (
+    CLIPPING_PROMPT_V1_USER,
+    CLIPPING_PROMPT_V1_SYSTEM,
+    CLIPPING_ENTIRE_VIDEO_PROMPT,
+    CLIPPING_BATCH_PROMPT,
+    MOMENT_PROMPT_V1_SYSTEM,
+    MOMENT_PROMPT_V1_USER,
+    CLIPPING_PROMPT_V2_SYSTEM,
+    CLIPPING_PROMPT_V2_USER,
+)
 
 
 RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY")
@@ -71,6 +80,13 @@ def _format_time(seconds_float):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
+def format_clipping_system_prompt(video_length: float, is_entire_video=False):
+    return CLIPPING_PROMPT_V1_SYSTEM.format(
+        total_video_duration=_format_time(ceil(video_length)),
+        batch_prompt=CLIPPING_ENTIRE_VIDEO_PROMPT if is_entire_video else CLIPPING_BATCH_PROMPT,
+    )
+
+
 def format_clipping_prompt(
     segments: list[TranscriptionSegment], topic: str, video_length: float
 ):
@@ -129,8 +145,8 @@ def call_openai(prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5
     )
 
 
-MIN_CLIP_LENGTH = 30
-MAX_CLIP_LENGTH = 90
+MIN_CLIP_LENGTH = 20
+MAX_CLIP_LENGTH = 60
 
 
 def _validate_and_parse_clip_dict(clip_dict: dict):
@@ -199,11 +215,36 @@ def parse_clips_response(response):
 async def get_clips(segments, topic):
     all_clips = []
     batch_size = 100
+
+    if len(segments) == 0:
+        return []
+
+    video_duration = segments[-1].end
+    if video_duration < MIN_CLIP_LENGTH:
+        return []
+
+    if video_duration < MAX_CLIP_LENGTH:
+        return [{"start": segments[0].start, "end": floor(segments[-1].end)}]
+
     for i in range(0, len(segments), batch_size):
-        prompt = format_clipping_prompt(segments[i : i + batch_size], topic, segments[-1].end)
+        batch = segments[i : i + batch_size]
+
+        is_entire_video = i == 0 and len(segments) <= batch_size
+
+        prompt = format_clipping_prompt(
+            batch,
+            topic,
+            segments[-1].end,
+        )
+
+        system_prompt = format_clipping_system_prompt(
+            segments[-1].end, is_entire_video=is_entire_video
+        )
 
         response = call_openai(
-            prompt, system_prompt=CLIPPING_PROMPT_V1_SYSTEM, model="gpt-4-1106-preview"
+            prompt,
+            system_prompt=system_prompt,
+            model="gpt-4-1106-preview",
         )
         new_clips = parse_clips_response(response.choices[0].message.content)
         if new_clips:
@@ -213,5 +254,240 @@ async def get_clips(segments, topic):
     return all_clips
 
 
+def _validate_and_parse_moment_dict(moment_dict: dict):
+    if not isinstance(moment_dict, dict):
+        return None
+
+    if not "id" in moment_dict or not "rating" in moment_dict:
+        return None
+
+    if moment_dict["rating"].lower() not in ["excellent", "great", "good", "neutral"]:
+        return None
+
+    return {"id": int(moment_dict["id"]), "rating": moment_dict["rating"].lower()}
+
+
+def parse_moments_response(response):
+    try:
+        if isinstance(response, str):
+            response = json.loads(response)
+
+        if isinstance(response, list):
+            return [
+                parsed_clip
+                for clip in response
+                if (parsed_clip := _validate_and_parse_moment_dict(clip))
+            ]
+
+        if isinstance(response, dict):
+            if len(response.keys()) == 0:
+                return []
+
+            clip_key = None
+            for key in response.keys():
+                if isinstance(response[key], list):
+                    clip_key = key
+                    break
+
+            if not clip_key:
+                return []
+
+            return [
+                parsed_clip
+                for clip in response[clip_key]
+                if (parsed_clip := _validate_and_parse_moment_dict(clip))
+            ]
+        print("Invalid moments response:", response)
+    except Exception as e:
+        print(e)
+        return []
+
+    return []
+
+
+def parse_clips_v2_response(response):
+    try:
+        if isinstance(response, str):
+            response = json.loads(response)
+
+        if not isinstance(response, dict):
+            return None
+
+        if "start" not in response or "end" not in response:
+            return None
+
+        return {"start": int(response["start"]), "end": int(response["end"])}
+    except Exception as e:
+        print(e)
+        return None
+
+
+BUFFER_TIME = 0.5  # half second added to start/end to make sure we don't cut off words
+
+
+async def get_clips_v2(segments, topic, max_clips=5):
+    if len(segments) == 0:
+        return []
+
+    video_duration = segments[-1].end
+    if video_duration < MIN_CLIP_LENGTH:
+        return []
+
+    if video_duration < MAX_CLIP_LENGTH:
+        return [{"start": segments[0].start, "end": floor(segments[-1].end)}]
+
+    batch_size = 100
+    all_moments = []
+    for i in range(0, len(segments), batch_size):
+
+        transcription = []
+
+        batch = segments[i : i + batch_size]
+        for index, seg in enumerate(batch):
+            transcription.append(
+                {
+                    "id": index,
+                    "start": _format_time(floor(seg.start)),
+                    "end": _format_time(ceil(seg.end)),
+                    "text": seg.text,
+                }
+            )
+
+        prompt = MOMENT_PROMPT_V1_USER.format(
+            topic=topic, transcription=json.dumps(transcription)
+        )
+
+        response = call_openai(
+            prompt,
+            system_prompt=MOMENT_PROMPT_V1_SYSTEM,
+            model="gpt-4-1106-preview",
+        )
+
+        moments = parse_moments_response(response.choices[0].message.content)
+
+        for moment in moments:
+            all_moments.append({"id": int(moment["id"]) + i, "rating": moment["rating"]})
+
+    if not all_moments:
+        print("No moments found")
+        return []
+
+    rating_order = {"excellent": 1, "great": 2, "good": 3, "neutral": 4}
+
+    sorted_moments = sorted(all_moments, key=lambda x: rating_order[x["rating"]])
+    for moment in sorted_moments:
+        print(moment)
+
+    clips = []
+    for moment in sorted_moments:
+
+        if len(clips) == max_clips:
+            break
+
+        segment = segments[moment["id"]]
+
+        segment_middle = segment.start + (segment.end - segment.start) / 2
+        if any(clip["start"] < segment_middle < clip["end"] for clip in clips):
+            print("Moment already included in another clip")
+            continue
+
+        end_id = moment["id"] + 1
+        while True:
+            if end_id == len(segments):
+                break
+
+            if segments[end_id].end - segment.end > MAX_CLIP_LENGTH:
+                break
+
+            end_id += 1
+
+        start_id = moment["id"] - 1
+        while True:
+            if start_id == -1:
+                break
+
+            if segment.start - segments[start_id].start > MAX_CLIP_LENGTH:
+                break
+
+            start_id -= 1
+
+        potential_clip_segments = segments[start_id + 1 : end_id]
+
+        prompt = CLIPPING_PROMPT_V2_USER.format(
+            transcription=json.dumps(
+                [
+                    {"id": index, "text": seg.text}
+                    for index, seg in enumerate(potential_clip_segments)
+                ]
+            ),
+            key_segment={"id": potential_clip_segments.index(segment), "text": segment.text},
+        )
+
+        system_prompt = CLIPPING_PROMPT_V2_SYSTEM.format(
+            min_clip_length=MIN_CLIP_LENGTH, max_clip_length=MAX_CLIP_LENGTH
+        )
+
+        response = call_openai(
+            prompt,
+            system_prompt=system_prompt,
+            model="gpt-4-1106-preview",
+        )
+
+        clip = parse_clips_v2_response(response.choices[0].message.content)
+        if not clip:
+            continue
+
+        print(
+            str(
+                potential_clip_segments[clip["end"]].end
+                - potential_clip_segments[clip["start"]].start
+            )
+            + ": \n"
+            + str([seg.text for seg in potential_clip_segments[clip["start"] : clip["end"]]])
+        )
+
+        if clip["start"] > potential_clip_segments.index(segment):
+            print("Invalid start, does not include interesting moment")
+            continue
+
+        if clip["end"] < potential_clip_segments.index(segment):
+            print("Invalid end, does not include interesting moment")
+            continue
+
+        # adjust clips boundaries to include buffer time and fit in max clip length
+
+        start = potential_clip_segments[clip["start"]].start
+        if clip["start"] > 0:
+            print("Adding buffer time to start of clip")
+            start = max(start - BUFFER_TIME, potential_clip_segments[clip["start"] - 1].end)
+
+        end = potential_clip_segments[clip["end"]].end
+
+        if end - start > MAX_CLIP_LENGTH:
+            print("Clip too long, adjusting")
+            end = start + MAX_CLIP_LENGTH
+        elif end - start < MIN_CLIP_LENGTH:
+            print("Clip too short, adjusting")
+            end = start + MIN_CLIP_LENGTH
+        elif (
+            end + BUFFER_TIME < MAX_CLIP_LENGTH
+            and clip["end"] < len(potential_clip_segments) - 1
+        ):
+            print("Adding buffer time to end of clip")
+            end = min(
+                end + BUFFER_TIME,
+                potential_clip_segments[clip["end"] + 1].start,
+            )
+
+        clips.append(
+            {
+                "start": start,
+                "end": end,
+            }
+        )
+
+    return clips
+
+
 if __name__ == "__main__":
-    parse_clips_response("")
+    pass

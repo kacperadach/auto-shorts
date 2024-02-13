@@ -1,0 +1,15 @@
+.testimonial {
+    transition: transform 1s ease;
+}
+
+.testimonial-right {
+    transform: perspective(500px) rotateY(-14deg);
+}
+
+.testimonial-left {
+    transform: perspective(500px) rotateY(14deg);
+}
+
+.testimonial:hover {
+    transform: perspective(500px) rotateY(0deg);
+}

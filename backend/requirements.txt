@@ -1,24 +1,34 @@
+aiohttp
 boto3==1.34.24
+beautifulsoup4==4.12.2
 # decord==0.6.0
 fastapi==0.109.0
 ffmpeg-python==0.2.0
 google-auth-oauthlib==1.2.0
+google-cloud-tasks==2.15.0
+google-api-python-client
 imageio==2.33.1
 numpy==1.26.3
 openai==1.9.0
 opencv-python==4.9.0.80
+psycopg2==2.9.9
 pydantic==2.5.3
+PyJWT==2.8.0
 python-dotenv==1.0.0
 remotion-lambda==4.0.96
 requests==2.31.0
 scenedetect==0.6.2
 scipy==1.12.0
+slack_sdk==3.26.2
+stripe==6.1.0
+supabase==2.3.2
+SQLAlchemy==1.4.50
 # torch==2.1.2+cu118 --find-links https://download.pytorch.org/whl/cu118
 # torchaudio==2.1.2+cu118 --find-links https://download.pytorch.org/whl/cu118
 # torchvision==0.16.2+cu118 --find-links https://download.pytorch.org/whl/cu118
 tqdm==4.66.1
 uvicorn==0.27.0
-yt-dlp==2023.12.30
+yt-dlp==2023.11.16
 
 
 # pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118

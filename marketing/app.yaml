@@ -1,0 +1,37 @@
+runtime: nodejs18
+
+service: marketing
+
+handlers:
+  # Serve all static files with URL ending with a file extension
+  - url: /(.*\..+)$
+    static_files: dist/\1
+    upload: dist/(.*\..+)$
+    http_headers:
+      Cache-Control: "max-age=86400, must-revalidate" # 24 hours
+  # Catch all handler to serve index.html
+  - url: /pricing
+    static_files: dist/pricing/index.html
+    upload: dist/pricing/index.html
+    http_headers:
+      Cache-Control: "no-cache, must-revalidate" # No cache for HTML file
+  - url: /privacy-policy
+    static_files: dist/privacy-policy/index.html
+    upload: dist/privacy-policy/index.html
+    http_headers:
+      Cache-Control: "no-cache, must-revalidate" # No cache for HTML file
+  - url: /terms-of-service
+    static_files: dist/terms-of-service/index.html
+    upload: dist/terms-of-service/index.html
+    http_headers:
+      Cache-Control: "no-cache, must-revalidate" # No cache for HTML file
+  - url: /disclosure-statement
+    static_files: dist/disclosure-statement/index.html
+    upload: dist/disclosure-statement/index.html
+    http_headers:
+      Cache-Control: "no-cache, must-revalidate" # No cache for HTML file
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
+    http_headers:
+      Cache-Control: "no-cache, must-revalidate" # No cache for HTML file

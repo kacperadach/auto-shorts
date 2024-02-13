@@ -1,0 +1,7 @@
+dispatch:
+  - url: "api.autorepurpose.com/*"
+    service: backend
+  - url: "app.autorepurpose.com/*"
+    service: frontend
+  - url: "www.autorepurpose.com/*"
+    service: marketing

@@ -1,7 +1,7 @@
 import { Composition, getInputProps } from "remotion";
 
 import { CroppingBox, SubtitleSegment } from "../lib/types";
-import { VideoComposition } from "../components/VideoComposition";
+import { VideoComposition } from "../components/video/VideoComposition";
 
 const COMPOSITION_ID = "VideoComposition";
 const FPS = 30;
@@ -38,7 +38,10 @@ export default function VideoRender() {
     <>
       <Composition
         id={COMPOSITION_ID}
-        durationInFrames={Math.ceil(durationInSeconds * FPS)}
+        durationInFrames={Math.min(
+          Math.ceil(durationInSeconds * FPS),
+          60 * FPS - 1 // always less than 60 seconds
+        )}
         fps={FPS}
         width={1080}
         height={1920}

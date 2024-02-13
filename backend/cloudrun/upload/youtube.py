@@ -12,7 +12,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # personal, dont use in prod
 client_id = os.getenv("GOOGLE_OAUTH_CLIENT_ID")
 client_secret = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")
-REFRESH_TOKEN = os.getenv("YOUTUBE_REFRESH_TOKEN")
 API_KEY = os.getenv("GOOGLE_API_KEY")
 
 

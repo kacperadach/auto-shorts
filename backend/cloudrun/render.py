@@ -30,12 +30,57 @@ class RenderException(Exception):
     pass
 
 
+def render_short_and_poll(
+    primary_url: str,
+    secondary_url: str,
+    durationInSeconds: int,
+    segments: list,
+    cropping_boxes: list,
+    width: int = 1080,
+    height: int = 1920,
+    highlight_color: str = "#33FF52",
+    secondary_color: str = "#FF3352",
+):
+    render_response = render_short(
+        primary_url,
+        secondary_url,
+        durationInSeconds,
+        segments,
+        cropping_boxes,
+        width,
+        height,
+        highlight_color,
+        secondary_color,
+    )
+
+    # Execute progress request
+    progress_response = client.get_render_progress(
+        render_id=render_response["render_id"], bucket_name=render_response["bucket_name"]
+    )
+    while progress_response and not progress_response.done:
+        sleep(5)
+        print("Overall progress")
+        print(str(progress_response.overallProgress * 100) + "%")
+        progress_response = client.get_render_progress(
+            render_id=render_response["render_id"],
+            bucket_name=render_response["bucket_name"],
+        )
+    print("Render done!", progress_response.outputFile)
+    print(f"Costs: {progress_response.costs}")
+
+    return progress_response.outputFile
+
+
 def render_short(
     primary_url: str,
     secondary_url: str,
     durationInSeconds: int,
     segments: list,
     cropping_boxes: list,
+    video_id: str,
+    channel_id: str,
+    repurposer_id: str,
+    run_id: str,
     width: int = 1080,
     height: int = 1920,
     highlight_color: str = "#33FF52",
@@ -55,6 +100,19 @@ def render_short(
             "segments": segments,
             "croppingBoxes": cropping_boxes,
         },
+        webhook={
+            "url": "https://backend-dot-autoshorts-412215.uc.r.appspot.com/v1/render-webhook",
+            "customData": {
+                "primary_url": primary_url,
+                "secondary_url": secondary_url,
+                "video_id": video_id,
+                "channel_id": channel_id,
+                "repurposer_id": repurposer_id,
+                "run_id": run_id,
+                "duration": durationInSeconds,
+            },
+        },
+        frames_per_lambda=40,  # the higher this is the lower the cost, slower the render
     )
     render_response = client.render_media_on_lambda(render_params)
     if not render_response:
@@ -63,22 +121,10 @@ def render_short(
     # Execute render request
     print("Render ID:", render_response.render_id)
     print("Bucket name:", render_response.bucket_name)
-    # Execute progress request
-    progress_response = client.get_render_progress(
-        render_id=render_response.render_id, bucket_name=render_response.bucket_name
-    )
-    while progress_response and not progress_response.done:
-        sleep(5)
-        print("Overall progress")
-        print(str(progress_response.overallProgress * 100) + "%")
-        progress_response = client.get_render_progress(
-            render_id=render_response.render_id,
-            bucket_name=render_response.bucket_name,
-        )
-    print("Render done!", progress_response.outputFile)
-    print(f"Costs: {progress_response.costs}")
-
-    return progress_response.outputFile
+    return {
+        "render_id": render_response.render_id,
+        "bucket_name": render_response.bucket_name,
+    }
 
 
 if __name__ == "__main__":
@@ -90,13 +136,13 @@ if __name__ == "__main__":
     from pathlib import Path
 
     script_directory = Path(__file__).parent.absolute()
-    with open(os.path.join(script_directory, "segments.json"), "r") as f:
-        segments = json.load(f)
+    # with open(os.path.join(script_directory, "segments.json"), "r") as f:
+    #     segments = json.load(f)
 
     render_short(
         "https://auto-shorts-storage.s3.amazonaws.com/video/0653e81d-bbfc-4ef4-8ea5-3e41dafb14d8_primary_984.0_1026.0.mp4",
         "https://auto-shorts-storage.s3.amazonaws.com/video/1332f5f0-851f-494e-afee-95a1cc1e95be_secondary_45_98.0.mp4",
         30,
-        segments,
+        [],
         [],
     )
