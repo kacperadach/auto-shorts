@@ -17,8 +17,9 @@ from shared.download import (
     download_youtube_info,
     download_youtube_vod,
     extract_clip_2_step_mp4,
-    is_valid_youtube_url,
+    validate_youtube_url,
     extract_video_id,
+    ValidationResult,
 )
 from shared.s3.s3 import upload_file_to_s3
 from whisper import (
@@ -119,14 +120,11 @@ def update_run_status(run_id: str, status: RunStatus):
 
 async def run(run_id: str, video_id: str, channel_id: str, is_manual: bool):
     try:
-        await _run(run_id, video_id, channel_id, is_manual)
-        update_run_status(run_id, RunStatus.COMPLETED)
+        success = await _run(run_id, video_id, channel_id, is_manual)
+        update_run_status(run_id, RunStatus.COMPLETED if success else RunStatus.FAILED)
     except Exception as e:
         stack_trace = traceback.format_exc()
         send_slack_message(
-            f"Failed to run for {run_id}, video: {video_id}: {e}\nStack trace:\n{stack_trace}"
-        )
-        print(
             f"Failed to run for {run_id}, video: {video_id}: {e}\nStack trace:\n{stack_trace}"
         )
         update_run_status(run_id, RunStatus.FAILED)
@@ -141,7 +139,7 @@ async def _run(run_id: str, video_id: str, channel_id: str, is_manual: bool):
         if not repurpose_run:
             send_slack_message(f"Run not found: {run_id}")
             print(f"Run not found: {run_id}")
-            return
+            return False
 
         repurposer = (
             db.query(Repurposer)
@@ -150,16 +148,15 @@ async def _run(run_id: str, video_id: str, channel_id: str, is_manual: bool):
         )
         if not repurposer:
             send_slack_message(f"Repurposer not found: {repurpose_run.repurposer_id}")
-            print(f"Repurposer not found: {repurpose_run.repurposer_id}")
-            return
+            return False
 
     clip_topic = repurposer.topic
     secondary_categories = repurposer.secondary_categories
 
-    if not is_valid_youtube_url(primary_url, repurposer.created_at, is_manual):
-        send_slack_message(f"Invalid primary url: {primary_url}")
-        print(f"Invalid primary url: {primary_url}")
-        return
+    validation_result = validate_youtube_url(primary_url, repurposer.created_at, is_manual)
+    if validation_result != ValidationResult.VALID:
+        send_slack_message(f"Invalid primary url: {primary_url}, {validation_result}")
+        return validation_result != ValidationResult.ERROR
 
     unique_id = str(uuid.uuid4())
 
@@ -183,16 +180,15 @@ async def _run(run_id: str, video_id: str, channel_id: str, is_manual: bool):
             db.commit()
             db.refresh(repurpose_run)
     else:
-        segments = [
-            TranscriptionSegment.model_load(segment) for segment in repurpose_run.audio_segments
-        ]
+        segments = [TranscriptionSegment(**segment) for segment in repurpose_run.audio_segments]
 
-    if not segments:
-        send_slack_message(
-            f"Failed to transcribe audio or no dialog for {primary_url}: {audio_s3_url}"
-        )
-        print(f"Failed to transcribe audio or no dialog for {primary_url}: {audio_s3_url}")
-        return
+    if segments is None:
+        send_slack_message(f"Failed to transcribe audio for {primary_url}: {audio_s3_url}")
+        return False
+
+    if len(segments) == 0:
+        send_slack_message(f"No audio segments found for {primary_url}: {audio_s3_url}")
+        return True
 
     if repurpose_run.clips is None:
         print(f"Getting clips for {primary_url}: {clip_topic}")
@@ -211,34 +207,15 @@ async def _run(run_id: str, video_id: str, channel_id: str, is_manual: bool):
     if not repurpose_run.clips:
         send_slack_message(f"No clips found for {primary_url}: {clip_topic}")
         print(f"No clips found for {primary_url}: {clip_topic}")
-        return
+        return True
 
     print(f"Downloading primary video: {primary_url}")
     primary_file_name = download_youtube_vod(primary_url, resolution=1080, ext="mp4")
     if not primary_file_name:
         send_slack_message(f"Failed to download primary video: {primary_url}")
-        print(f"Failed to download primary video: {primary_url}")
-        return
+        return False
 
     full_primary_file_path = os.path.join(script_directory, primary_file_name)
-
-    # print(f"Downloading secondary video: {secondary_url}")
-    # secondary_info = download_youtube_info(secondary_url)
-    # secondary_duration = secondary_info.get("duration", 0)
-
-    # if secondary_duration == 0 or secondary_duration < MAX_CLIP_LENGTH:
-    #     send_slack_message(f"Secondary video is too short: {secondary_url}")
-    #     raise Exception("secondary video is too short")
-
-    # secondary_file_name = download_youtube_vod(
-    #     secondary_url, info=secondary_info, resolution=1080, ext="mp4"
-    # )
-    # if not secondary_file_name:
-    #     send_slack_message(f"Failed to download secondary video: {secondary_url}")
-    #     print(f"Failed to download secondary video: {secondary_url}")
-    #     return
-
-    # full_secondary_file_path = os.path.join(script_directory, secondary_file_name)
 
     subtitle_segments = break_up_segments_for_subtitles(segments)
 
@@ -301,6 +278,8 @@ async def _run(run_id: str, video_id: str, channel_id: str, is_manual: bool):
             f"Rendering initiated for video: {primary_url}: {clip}, render info: {render_info}"
         )
         send_slack_message(f"Rendering initiated for video: {primary_url}: {clip}")
+
+    return True
 
 
 #     access_token = get_access_token_for_youtube(REFRESH_TOKEN)

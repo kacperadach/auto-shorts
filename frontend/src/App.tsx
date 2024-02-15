@@ -11,6 +11,7 @@ import Repurposer from "./components/repurposer/Repurporser";
 import Channel from "./components/channel/Channel";
 import RepurposerRun from "./components/run/RepurposerRun";
 import Oauth from "./components/oauth/Oauth";
+import { VideoPlayer } from "./components/video/VideoPlayer";
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -56,7 +57,7 @@ function App() {
               path="/repurposer/:repurposerId/run/:runId"
               element={<RepurposerRun />}
             />
-            <Route path="/oauth" element={<Oauth />} />
+            <Route path="player" element={<VideoPlayer />} />
           </Routes>
         </div>
       </BrowserRouter>

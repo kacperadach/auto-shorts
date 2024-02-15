@@ -18,6 +18,8 @@ def send_slack_message(message):
     for account_id, name in KNOWN_ACCOUNTS.items():
         message = message.replace(account_id, name)
 
+    print(message)
+
     try:
         slack_web_client.chat_postMessage(channel=CHANNEL, text=message)
     except Exception as exc:

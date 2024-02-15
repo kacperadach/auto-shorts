@@ -40,7 +40,7 @@ export default function VideoRender() {
         id={COMPOSITION_ID}
         durationInFrames={Math.min(
           Math.ceil(durationInSeconds * FPS),
-          60 * FPS - 1 // always less than 60 seconds
+          59 * FPS - 1 // always less than 59 seconds
         )}
         fps={FPS}
         width={1080}

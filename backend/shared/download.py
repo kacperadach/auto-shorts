@@ -6,6 +6,7 @@ import re
 from math import floor, ceil
 from uuid import uuid4
 from datetime import datetime, timedelta
+import enum
 
 import requests
 from bs4 import BeautifulSoup
@@ -309,38 +310,48 @@ def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
         print(e)
 
 
-def is_valid_youtube_url(url: str, repurpose_created_at: float, is_manual: bool):
+class ValidationResult(enum.Enum):
+    ERROR = "error"
+    VALID = "valid"
+    INVALID = "invalid"
+
+
+# TODO: handle premieres
+def validate_youtube_url(url: str, repurpose_created_at: float, is_manual: bool):
     def _validate(url):
         info = download_youtube_info(url)
 
         if not info:
             print(f"Could not find video info for {url}")
-            return False
+            return ValidationResult.ERROR
 
         if info.get("is_live"):
             print(f"Video is live: {url}")
-            return False
+            return ValidationResult.INVALID
 
         if info.get("was_live"):
             print(f"Video was livestream: {url}")
-            return False
+            return ValidationResult.INVALID
 
         if info.get("aspect_ratio") < 1:
             print(f"Video aspect ratio is too small: {url}")
-            return False
+            return ValidationResult.INVALID
 
         if not is_manual:
             uploaded_at_date_obj = datetime.strptime(info.get("upload_date"), "%Y%m%d")
-            repurposer_date_obj = datetime.fromtimestamp(repurpose_created_at) - timedelta(days=1)
-            return uploaded_at_date_obj > repurposer_date_obj
+            repurposer_date_obj = datetime.fromtimestamp(repurpose_created_at) - timedelta(
+                days=1
+            )
+            if uploaded_at_date_obj < repurposer_date_obj:
+                return ValidationResult.INVALID
 
-        return True
+        return ValidationResult.VALID
 
     try:
         return _validate(url)
     except Exception as exc:
         print(f"Failed to validate {url}: {exc}")
-        return False
+        return ValidationResult.ERROR
 
 
 def get_channel_info(url: str):

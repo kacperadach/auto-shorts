@@ -146,7 +146,7 @@ def call_openai(prompt: str, system_prompt: Optional[str] = None, model="gpt-3.5
 
 
 MIN_CLIP_LENGTH = 20
-MAX_CLIP_LENGTH = 60
+MAX_CLIP_LENGTH = 59
 
 
 def _validate_and_parse_clip_dict(clip_dict: dict):
