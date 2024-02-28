@@ -1,3 +1,38 @@
+export type LongShadow = {
+  width: number;
+  color: string;
+};
+
+export type TextShadow = {
+  x: number;
+  y: number;
+  blur: number;
+  color: string;
+};
+
+export type Text = {
+  text: string;
+  fontFamily?: string;
+  fontSize?: number;
+  fontWeight?: number;
+  color?: string;
+  longShadow?: LongShadow;
+  textShadow?: TextShadow;
+  letterSpacing?: number;
+};
+
+export type SubtitleSettings = {
+  highlightColor?: string;
+  secondaryColor?: string;
+  removePunctuation?: boolean;
+  allCaps?: boolean;
+  maxWordsPerLine?: number;
+  fontFamily?: string;
+  fontSize?: number;
+};
+
+export type RequiredSubtitleSettings = Required<SubtitleSettings>;
+
 export type SubtitleSegmentText = {
   text: string;
   start: number;
@@ -56,5 +91,9 @@ export type RenderedVideo = {
   duration: number;
 };
 
-
-export const SECONDARY_VIDEO_CATEGORIES = ["slime", "soap", "gta_ramp", "minecraft"];
+export const SECONDARY_VIDEO_CATEGORIES = [
+  "slime",
+  "soap",
+  "gta_ramp",
+  "minecraft",
+];

@@ -98,9 +98,12 @@ export function VideoInstance(props: VideoInstanceProps) {
             top: "-60px",
             left: `${left}px`,
             width: `${videoWidth}px`,
+            minWidth: `${videoWidth}px`,
             height: `${videoHeight}px`,
+            minHeight: `${videoHeight}px`,
           }}
           onError={() => {
+            // TODO: should pause render and wait until next load is ready
             setVideoUrl(url + "?t=" + Date.now());
           }}
         />

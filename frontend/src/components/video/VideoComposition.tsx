@@ -55,8 +55,8 @@ export function VideoComposition(props: VideoCompositionProps) {
       </div>
       <Subtitles
         segments={segments}
-        highlightColor={highlightColor}
-        secondaryColor={secondaryColor}
+        settings={{}}
+       
       />
     </AbsoluteFill>
   );

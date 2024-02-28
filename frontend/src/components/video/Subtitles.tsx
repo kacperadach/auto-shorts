@@ -1,54 +1,63 @@
 import { useMemo } from "react";
 
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { useCurrentFrame, useVideoConfig, interpolateColors } from "remotion";
 import { generateFullLongShadow } from "../../lib/textShadow";
-import { SubtitleSegment } from "../../lib/types";
-
-const MAX_FONT_MULTIPLIER = 1.75;
-const BASE_FONT = 72;
+import { SubtitleSegment, SubtitleSettings } from "../../lib/types";
+import { adjustSegments, getSettingsWithDefaults } from "../../lib/subtitles";
+import SubtitleWord from "./SubtitleWord";
 
 interface SubtitlesProps {
   segments: SubtitleSegment[];
-  highlightColor: string;
-  secondaryColor: string;
+  settings: SubtitleSettings;
 }
 
 export function Subtitles(props: SubtitlesProps) {
-  const { segments, highlightColor, secondaryColor } = props;
+  const { segments, settings } = props;
   const currentFrame = useCurrentFrame();
+
+  const config = useVideoConfig();
+  const durationInSeconds = config.durationInFrames / config.fps;
+
+  const settingsWithDefaults = useMemo(() => {
+    return getSettingsWithDefaults(settings);
+  }, [settings]);
+
+  const adjustedSegments: SubtitleSegment[] = useMemo(() => {
+    return adjustSegments(segments, settingsWithDefaults, durationInSeconds);
+  }, [segments, settingsWithDefaults]);
 
   const fps = useVideoConfig().fps;
 
   const currentTime = currentFrame / fps;
 
-  const currentSegment = segments.find((segment) => {
+  const currentSegment = adjustedSegments.find((segment) => {
     return currentTime >= segment.start && currentTime <= segment.end;
   });
 
-  const maxSegmentLength = useMemo(() => {
-    return segments.reduce((acc, segment) => {
-      const segmentLength = segment.word_timings.reduce((acc, word) => {
-        const wordLength = word.text.length;
-        return acc + wordLength;
-      }, 0);
-      return segmentLength > acc ? segmentLength : acc;
-    }, 0);
-  }, [segments]);
+  // const maxSegmentLength = useMemo(() => {
+  //   return adjustedSegments.reduce((acc, segment) => {
+  //     const segmentLength = segment.word_timings.reduce((acc, word) => {
+  //       const wordLength = word.text.length;
+  //       return acc + wordLength;
+  //     }, 0);
+  //     return segmentLength > acc ? segmentLength : acc;
+  //   }, 0);
+  // }, [adjustedSegments]);
 
-  const segmentLength = currentSegment
-    ? currentSegment.word_timings.reduce((acc, word) => {
-        const wordLength = word.text.length;
-        return acc + wordLength;
-      }, 0)
-    : 0;
+  // const segmentLength = currentSegment
+  //   ? currentSegment.word_timings.reduce((acc, word) => {
+  //       const wordLength = word.text.length;
+  //       return acc + wordLength;
+  //     }, 0)
+  //   : 0;
 
-  const fontMultiplier = useMemo(() => {
-    // Calculate the ratio of the current segment length to the max segment length
-    const ratio = segmentLength / maxSegmentLength;
+  // const fontMultiplier = useMemo(() => {
+  //   // Calculate the ratio of the current segment length to the max segment length
+  //   const ratio = segmentLength / maxSegmentLength;
 
-    // Invert the ratio and scale it to the range between 1 and MAX_FONT_MULTIPLIER
-    return MAX_FONT_MULTIPLIER - ratio * (MAX_FONT_MULTIPLIER - 1);
-  }, [segmentLength, maxSegmentLength]);
+  //   // Invert the ratio and scale it to the range between 1 and MAX_FONT_MULTIPLIER
+  //   return MAX_FONT_MULTIPLIER - ratio * (MAX_FONT_MULTIPLIER - 1);
+  // }, [segmentLength, maxSegmentLength]);
 
   return (
     <div
@@ -57,11 +66,11 @@ export function Subtitles(props: SubtitlesProps) {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        fontSize: `${BASE_FONT * fontMultiplier}px`,
+        fontSize: `${settingsWithDefaults.fontSize}px`,
         color: "white",
-        textShadow: generateFullLongShadow(8, "black").toString(),
+        // textShadow: generateFullLongShadow(6, "black").toString(),
         width: "80%",
-        fontFamily: "Helvetica",
+        fontFamily: settingsWithDefaults.fontFamily,
         fontWeight: "bold",
         textAlign: "center",
         display: "flex",
@@ -70,26 +79,65 @@ export function Subtitles(props: SubtitlesProps) {
         alignItems: "center",
       }}
     >
-      {currentSegment &&
-        currentSegment.word_timings.map((wordTiming, index) => {
-          const isCurrentWord =
-            currentTime >= wordTiming.start && currentTime <= wordTiming.end;
+      <p style={{ lineHeight: 1.2, whiteSpace: "break-spaces" }}>
+        {currentSegment &&
+          currentSegment.word_timings.map((wordTiming, index) => {
+            let color = "white";
+            const wordStartFrame = Math.floor(wordTiming.start * fps);
 
-          let color = "white";
-          if (isCurrentWord) {
-            if (currentSegment.word_timings.length > 2) {
-              color = highlightColor;
-            } else {
-              color = secondaryColor;
+            const wordEndFrame = Math.ceil(wordTiming.end * fps);
+
+            color = interpolateColors(
+              currentFrame,
+              [0, wordStartFrame, wordEndFrame, wordEndFrame + 10],
+              ["white", "white", settingsWithDefaults.highlightColor, "white"]
+            );
+
+            // const isCurrentWord =
+            //   currentTime >= wordTiming.start && currentTime <= wordTiming.end;
+
+            // if (isCurrentWord) {
+            //   const wordStartFrame = wordTiming.start * fps;
+            //   color = interpolateColors(
+            //     currentFrame,
+            //     [wordStartFrame - 30, wordStartFrame + 30],
+            //     ["white", settingsWithDefaults.highlightColor]
+            //   );
+
+            //   // color = settingsWithDefaults.highlightColor as string;
+            //   // if (currentSegment.word_timings.length > 2) {
+            //   //   color = settingsWithDefaults.highlightColor as string;
+            //   // } else {
+            //   //   color = settingsWithDefaults.secondaryColor as string;
+            //   // }
+            // }
+
+            let finalText = wordTiming.text;
+            if (settingsWithDefaults.allCaps) {
+              finalText = wordTiming.text.toUpperCase();
             }
-          }
 
-          return (
-            <span key={index} style={{ color }}>
-              {wordTiming.text}
-            </span>
-          );
-        })}
+            if (settingsWithDefaults.removePunctuation) {
+              finalText = finalText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            }
+
+            // return (
+            //   <span key={index} style={{ color }}>
+            //     {finalText}
+            //   </span>
+            // );
+            return (
+              <SubtitleWord
+                key={index}
+                text={{
+                  text: finalText,
+                  fontSize: settingsWithDefaults.fontSize,
+                  fontFamily: settingsWithDefaults.fontFamily,
+                }}
+              />
+            );
+          })}
+      </p>
     </div>
   );
 }
